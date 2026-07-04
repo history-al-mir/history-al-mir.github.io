@@ -1,3 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шаблон переписки с collapsible</title>
+    <style>
+        /* ——— Общие стили ——— */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0b;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 30px 16px 60px;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: #111112;
+            border-radius: 20px;
+            padding: 30px 24px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* ——— Заголовок ——— */
+        .header {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #2a2a2c;
+            margin-bottom: 28px;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: #2a1a3a;
+            color: #b98aff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            border: 1px solid #3d2a55;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .header h1 span {
+            color: #7a5ac7;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* ——— Collapsible блоки ——— */
+        details {
+            margin-bottom: 16px;
+            border-radius: 14px;
+            background: #18181a;
+            border: 1px solid #28282b;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        details:hover {
+            border-color: #3d3d42;
+        }
+
+        details[open] {
+            border-color: #4a3a6a;
+        }
+
+        summary {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            color: #ddd;
+            user-select: none;
+            transition: background 0.2s;
+            list-style: none;
+            position: relative;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: "▶";
+            font-size: 12px;
+            color: #666;
+            margin-left: auto;
+            transition: transform 0.25s ease;
+        }
+
+        details[open] summary::after {
+            transform: rotate(90deg);
+        }
+
+        summary:hover {
+            background: #202022;
+        }
+
+        summary .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        summary .label {
+            flex: 1;
+        }
+
+        summary .count {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.3);
+            background: #222224;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        /* ——— Сообщения ——— */
+        .messages {
+            padding: 8px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .msg {
+            display: flex;
+            gap: 10px;
+            max-width: 92%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            padding-right: 40px;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+            padding-left: 40px;
+        }
+
+        .msg .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1c1c1d;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #aaa;
+            border: 1px solid #2e2e30;
+        }
+
+        .msg-ai .avatar {
+            background: #1c1c1d;
+        }
+
+        .msg-user .avatar {
+            background: #3a2a6a;
+            border-color: #5a3a9a;
+        }
+
+        .msg .bubble {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .msg-ai .bubble {
+            background: rgba(16, 16, 17, 0.98);
+            border-top-left-radius: 2px;
+            color: #eee;
+            border: 1px solid #28282b;
+        }
+
+        .msg-user .bubble {
+            background: #463aba;
+            border-top-right-radius: 2px;
+            color: #fff;
+        }
+
+        .msg .bubble .italic {
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        .msg .bubble .speaker {
+            font-weight: 600;
+            color: #b98aff;
+        }
+
+        .msg .bubble .speaker-user {
+            font-weight: 600;
+            color: #c8b0ff;
+        }
+
+        /* ——— Разделитель сцен ——— */
+        .scene-break {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0 10px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .scene-break::before,
+        .scene-break::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #28282b;
+        }
+
+        /* ——— Подвал ——— */
+        .footer-note {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #1e1e20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+        }
+
+        .footer-note .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ——— Адаптив ——— */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 12px 30px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .msg {
+                max-width: 100%;
+            }
+
+            .msg-ai {
+                padding-right: 8px;
+            }
+
+            .msg-user {
+                padding-left: 8px;
+            }
+
+            .msg .bubble {
+                font-size: 13px;
+                padding: 10px 14px;
+            }
+
+            summary {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+
+            .messages {
+                padding: 4px 8px 16px;
+                gap: 12px;
+            }
+        }
+
+        /* ——— Стиль скроллбара ——— */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #18181a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3d3d42;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ЗАГОЛОВОК ===== -->
+        <div class="header">
+            <div class="badge">💬 ВАША ПЕРЕПИСКА</div>
+            <h1>Диалог <span>·</span> Сворачиваемые блоки</h1>
+            <p>Нажмите на заголовок, чтобы раскрыть или скрыть часть переписки</p>
+        </div>
+
+        <!-- ========================================================== -->
+        <!--  БЛОК 1 — пример (вставьте свои сообщения сюда)            -->
+        <!-- ========================================================== -->
+        <details open>
+            <summary>
+                <span class="icon">📋</span>
+                <span class="label">Блок 1 · Начало разговора</span>
+                <span class="count">2 сообщения</span>
+            </summary>
+            <div class="messages">
+
+
 <div style="width: 722px; height: 21892px; padding-top: 120px; padding-left: 18px; padding-right: 16px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
   <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
@@ -3529,3 +3888,48 @@
     </div>
   </div>
 </div>
+
+
+
+                          </div>
+        </details>
+
+        <!-- ========================================================== -->
+        <!--  БЛОК 2 — ещё один блок                                     -->
+        <!-- ========================================================== -->
+        <details>
+            <summary>
+                <span class="icon">📌</span>
+                <span class="label">Блок 2 · Продолжение</span>
+                <span class="count">2 сообщения</span>
+            </summary>
+            <div class="messages">
+
+                <div class="msg msg-ai">
+                    <div class="avatar">🤖</div>
+                    <div class="bubble">
+                        Можно использовать <span class="speaker">Имя говорящего:</span> текст реплики.
+                    </div>
+                </div>
+
+                <div class="msg msg-user">
+                    <div class="avatar">👤</div>
+                    <div class="bubble">
+                        <span class="italic">Действие или описание</span> можно выделить курсивом.
+                    </div>
+                </div>
+
+            </div>
+        </details>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer-note">
+            <span class="dot"></span>
+            Вставьте свои сообщения в блоки <code>.messages</code> внутри <code>&lt;details&gt;</code>
+            <span class="dot"></span>
+        </div>
+
+    </div>
+
+</body>
+</html>
