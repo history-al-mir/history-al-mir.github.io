@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Генератор вложенного списка (из эмодзи)</title>
+    <style>
+        /* ── общие стили ── */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: #f5f7fa;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px 35px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 0;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .sub {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 14px;
+        }
+        .sub code {
+            background: #f1f4f9;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0f172a;
+        }
+
+        /* ── поле ввода ── */
+        .editor-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 190px;
+            padding: 14px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.7;
+            border: 1px solid #d0d7e2;
+            border-radius: 10px;
+            background: #fafcff;
+            resize: vertical;
+            transition: border 0.2s;
+            color: #0b1e33;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #7c8db0;
+            box-shadow: 0 0 0 3px rgba(60, 80, 120, 0.12);
+        }
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 45%;
+        }
+        .btn:hover {
+            background: #0f172a;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            border: 1px solid #d0d7e2;
+        }
+        .btn-outline:hover {
+            background: #f1f4f9;
+        }
+
+        /* ── вывод ── */
+        .output-wrap {
+            border-top: 1px solid #e9edf2;
+            padding-top: 22px;
+            margin-top: 6px;
+        }
+        .output-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .output-label span {
+            background: #e9edf2;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #475569;
+            font-weight: 400;
+        }
+        #rendered {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 6px 0 4px 0;
+            min-height: 60px;
+        }
+
+        /* ── стили для генерируемого списка (полностью как в примере) ── */
+
+        /* анимация для открытого состояния */
+        .nested-list details[open]>summary {
+            padding-left: 60% !important;
+            font-size: 5px !important;
+            transition: padding-left 0.25s ease, font-size 0.25s ease;
+        }
+        .nested-list details summary {
+            transition: padding-left 0.25s ease, font-size 0.25s ease;
+            list-style: none;
+        }
+        .nested-list details summary::-webkit-details-marker {
+            display: none;
+        }
+        .nested-list details summary::before {
+            content: "▶ ";
+            font-size: 12px;
+            display: inline-block;
+            transition: transform 0.25s ease;
+        }
+        .nested-list details[open]>summary::before {
+            transform: rotate(90deg);
+        }
+
+        /* корневой контейнер списка */
+        .nested-list.root-list {
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 14px 0px 14px 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .nested-list .item-details {
+            display: block;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 5px;
+            padding: 8px 0px 8px 12px;
+            margin: 6px 0 0 0;
+        }
+        .nested-list .item-details .summary-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .nested-list .item-details .children-wrap {
+            padding: 6px 0 2px 0;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .nested-list .file-details {
+            display: block;
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin: 8px 0 0 0;
+        }
+        .nested-list .file-details .summary-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #111;
+            cursor: pointer;
+            padding: 3px 0;
+        }
+
+        /* переопределение для root summary */
+        .nested-list.root-list>details>summary {
+            display: block;
+            font-size: 17px;
+            font-weight: bold;
+            color: #222;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .empty-hint {
+            color: #94a3b8;
+            font-size: 14px;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        /* ── адаптив ── */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 14px;
+            }
+            .nested-list.root-list {
+                max-width: 100%;
+            }
+            textarea {
+                min-height: 307px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="editor-wrap">
+            <textarea id="inputData" spellcheck="false"></textarea>
+            <div class="btn-row">
+                <button class="btn" id="generateBtn">▶ Сгенерировать</button>
+                <button class="btn btn-outline" id="resetBtn">↺ Сбросить пример</button>
+            </div>
+        </div>
+
+        <div class="output-wrap">
+            <div class="output-label">
+                Результат
+                <span id="countBadge">0 элементов</span>
+            </div>
+            <div id="rendered">
+                <div class="empty-hint">Нажмите «Сгенерировать»</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ─── DOM ссылки ───────────────────────────────────────────────
+            const textarea = document.getElementById('inputData');
+            const renderContainer = document.getElementById('rendered');
+            const countBadge = document.getElementById('countBadge');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // ─── эталонный пример ───────────────────────────────────────
+            const DEFAULT_DATA =
+                `📂 Мои файлы
+          📁📁 Проекты
+            📄📄📄 readme.md
+            📄📄📄 index.html
+          📁📁 Документы
+            📄📄📄 report.pdf`;
+
+            // ─── парсер ──────────────────────────────────────────────────
+            function parseTree(text) {
+                const lines = text.split('\n');
+                const result = [];
+                const stack = [];
+
+                for (let raw of lines) {
+                    // удаляем пробелы в начале и конце, но сохраняем внутренние
+                    const line = raw.trim();
+                    if (!line) continue;
+
+                    // считаем эмодзи в начале строки (любые эмодзи)
+                    const emojiMatch = line.match(/^(\p{Emoji}+)/u);
+                    if (!emojiMatch) continue;
+
+                    const emojiStr = emojiMatch[1];
+                    const level = emojiStr.length - 1; // 1 эмодзи → уровень 0
+                    const name = line.substring(emojiMatch[0].length).trim();
+
+                    const item = {
+                        name: name,
+                        level: level,
+                        children: [],
+                        emoji: emojiStr // сохраняем для отображения
+                    };
+
+                    // если это корневой уровень (level === 0) — добавляем в результат
+                    if (level === 0) {
+                        // если уже есть корень на стеке — закрываем его
+                        while (stack.length > 0) {
+                            stack.pop();
+                        }
+                        result.push(item);
+                        stack.push(item);
+                        continue;
+                    }
+
+                    // ищем родителя: поднимаемся по стеку, пока не найдём уровень меньше текущего
+                    while (stack.length > 0 && stack[stack.length - 1].level >= level) {
+                        stack.pop();
+                    }
+
+                    if (stack.length === 0) {
+                        // если стек пуст — это корень (уровень 0)
+                        result.push(item);
+                        stack.push(item);
+                    } else {
+                        const parent = stack[stack.length - 1];
+                        parent.children.push(item);
+                        stack.push(item);
+                    }
+                }
+
+                return result;
+            }
+
+            // ─── рендеринг в HTML ──────────────────────────────────────
+            function renderTree(items, isRoot = true) {
+                if (!items || items.length === 0) {
+                    return '<div class="empty-hint">(пусто)</div>';
+                }
+
+                let html = '';
+
+                // корневой контейнер
+                if (isRoot) {
+                    html = `<div class="nested-list root-list">`;
+                }
+
+                for (const item of items) {
+                    // Определяем, является ли элемент папкой (имеет детей) или файлом
+                    const hasChildren = item.children && item.children.length > 0;
+
+                    if (hasChildren) {
+                        // ── Папка (details) ──
+                        html += `
+                        <details class="item-details" open>
+                            <summary class="summary-label">
+                                ${item.emoji} ${item.name}
+                            </summary>
+                            <div class="children-wrap">
+                                ${renderTree(item.children, false)}
+                            </div>
+                        </details>
+                        `;
+                    } else {
+                        // ── Файл (details без вложенности) ──
+                        html += `
+                        <details class="file-details" open>
+                            <summary class="summary-label">
+                                ${item.emoji} ${item.name}
+                            </summary>
+                        </details>
+                        `;
+                    }
+                }
+
+                if (isRoot) {
+                    html += `</div>`;
+                }
+
+                return html;
+            }
+
+            // ─── подсчёт элементов (для бейджа) ──────────────────────
+            function countItems(items) {
+                let count = 0;
+                for (const item of items) {
+                    count += 1;
+                    if (item.children && item.children.length > 0) {
+                        count += countItems(item.children);
+                    }
+                }
+                return count;
+            }
+
+            // ─── главная функция генерации ────────────────────────────
+            function generate(text) {
+                const tree = parseTree(text);
+                const total = countItems(tree);
+                const html = renderTree(tree, true);
+                return { html, total };
+            }
+
+            // ─── обновление интерфейса ────────────────────────────────
+            function updateOutput(text) {
+                const { html, total } = generate(text);
+                renderContainer.innerHTML = html;
+                countBadge.textContent = total + ' элемент' + (total !== 1 ? 'ов' : '');
+            }
+
+            // ─── обработчики ────────────────────────────────────────────
+            generateBtn.addEventListener('click', function() {
+                const text = textarea.value;
+                updateOutput(text);
+            });
+
+            resetBtn.addEventListener('click', function() {
+                textarea.value = DEFAULT_DATA;
+                updateOutput(DEFAULT_DATA);
+            });
+
+            // ─── авто-генерация при загрузке ──────────────────────────
+            textarea.value = DEFAULT_DATA;
+            updateOutput(DEFAULT_DATA);
+
+            // ─── поддержка Ctrl+Enter ──────────────────────────────────
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    generateBtn.click();
+                }
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
