@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Шахматная доска с перетаскиваемыми фигурами</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: #f0f0f0;
+    font-family: sans-serif;
+    gap: 24px;
+    padding: 24px 0;
+  }
+
+  .app-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .main-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .behavior-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: #ddd;
+    padding: 12px 10px;
+    border-radius: 8px;
+    position: sticky;
+    top: 24px;
+  }
+
+  .behavior-sidebar-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    max-width: 110px;
+    line-height: 1.3;
+  }
+
+  .behavior-sidebar-hint {
+    font-size: 10px;
+    color: #666;
+    text-align: center;
+    max-width: 110px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .behavior-group-label {
+    font-size: 10px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .behavior-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .behavior-slot {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    line-height: 1;
+    background: #fff;
+    border: 2px dashed #999;
+    border-radius: 8px;
+    cursor: default;
+    user-select: none;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  }
+
+  .behavior-slot.drag-over {
+    border-color: #2196f3;
+    background: #f0f7ff;
+    transform: scale(1.06);
+  }
+
+  .behavior-slot.assigned-flash {
+    animation: behaviorFlash 0.6s ease;
+  }
+
+  @keyframes behaviorFlash {
+    0%   { background: #a5d6a7; border-color: #4caf50; }
+    100% { background: #fff; border-color: #999; }
+  }
+
+  .piece.behavior-glow {
+    animation: pieceBehaviorGlow 1.1s ease-out;
+  }
+
+  @keyframes pieceBehaviorGlow {
+    0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.9), 0 0 18px 6px rgba(76,175,80,0.85); }
+    60%  { box-shadow: 0 0 0 6px rgba(76,175,80,0.25), 0 0 22px 10px rgba(76,175,80,0.55); }
+    100% { box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  }
+
+  .piece.behavior-marked::after {
+    content: '⚔️';
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    font-size: 12px;
+    line-height: 1;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    padding: 1px 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .behavior-toast {
+    position: fixed;
+    z-index: 9999;
+    background: #263238;
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    opacity: 0;
+    transform: translate(-50%, -6px);
+    animation: behaviorToastPop 1.8s ease forwards;
+  }
+
+  @keyframes behaviorToastPop {
+    0%   { opacity: 0; transform: translate(-50%, 0px); }
+    12%  { opacity: 1; transform: translate(-50%, -10px); }
+    75%  { opacity: 1; transform: translate(-50%, -10px); }
+    100% { opacity: 0; transform: translate(-50%, -16px); }
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(9, 60px);
+    grid-template-rows: repeat(9, 60px);
+    border: 2px solid #333;
+    position: relative;
+  }
+
+  :root {
+    --cell-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTAsIDUzKSIgb3BhY2l0eT0iMC4xMiI+CiAgICA8cGF0aCBkPSJNNTEuOTcyOSAwLjIzNjY5NEM2MS4xNjM4IDEuMTU0MDMgNjkuODgzMiA0LjcwOTgzIDc3LjA1ODIgMTAuNDY2NUM4NC4yMzMyIDE2LjIyMzIgODkuNTUwNyAyMy45Mjk2IDkyLjM1NjUgMzIuNjM3NUM5NS4xNjIyIDQxLjM0NTQgOTUuMzMzOCA1MC42NzUgOTIuODUwMSA1OS40NzgxQzkwLjM2NjQgNjguMjgxMyA4NS4zMzU5IDc2LjE3NCA3OC4zNzczIDgyLjE4NTJDNzEuNDE4OCA4OC4xOTYzIDYyLjgzNTkgOTIuMDYzNiA1My42ODQ4IDkzLjMxMTJDNDQuNTMzNyA5NC41NTg4IDM1LjIxMzYgOTMuMTMyMiAyNi44NzEzIDg5LjIwNzFDMTguNTI5IDg1LjI4MTkgMTEuNTI4NCA3OS4wMjk1IDYuNzMwOTcgNzEuMjE4OUMxLjkzMzU1IDYzLjQwODQgLTAuMjkwNTk1IDU0LjUwOTIgMC4wMzAzNDY1IDQ1LjM3NUwxMi4wNjQxIDQ2LjQwNjJDMTEuODI1OSA1My4xODU0IDEzLjYwOTEgNTkuMTQ1NiAxNy4xNjk2IDY0Ljk0MjRDMjAuNzMwMSA3MC43MzkxIDI1LjkyNTggNzUuMzc5NSAzMi4xMTcyIDc4LjI5MjdDMzguMzA4NiA4MS4yMDU4IDQ1LjIyNTcgODIuMjY0NSA1Mi4wMTc0IDgxLjMzODY1OC44MDkxIDgwLjQxMjcgNjUuMTc5MSA3Ny41NDI1IDcwLjM0MzUgNzMuMDgxMkM3NS41MDc5IDY4LjYxOTkgNzkuMjQxNSA2Mi43NjIyIDgxLjA4NDggNTYuMjI4N0M4Mi45MjgxIDQ5LjY5NTIgODIuODAwOCA0Mi43NzExIDgwLjcxODQgMzYuMzA4M0M3OC42MzYgMjkuODQ1NiA3NC42ODk1IDI0LjEyNjEgNjkuMzY0NSAxOS44NTM2QzY0LjAzOTQgMTUuNTgxMiA1OC43OTQxIDEzLjA1NTggNTEuOTcyOSAxMi4zNzVWMC4yMzY2OTRaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTAuMzQxODA5IDQxLjI1QzEuNzc0MzEgMjkuOTE4MiA3LjIwNCAxOS4zMDEgMTUuODU1MyAxMS43NDExQzI0LjUwNjYgNC4xODEyMiAzNS42NDk3IDAuMDA2MTg1OTkgNDcuMTkyMSAwTDQ3LjE5NTggNi42NzEyQzM3LjI5NjEgNi42NzY1MSAyNy43Mzg4IDEwLjI1NzQgMjAuMzE4OCAxNi43NDEzQzEyLjg5ODggMjMuMjI1MyA4LjEyNjI5IDMyLjE2NjMgNi44OTc2NiA0MS44ODU0TDAuMzQxODA5IDQxLjI1WiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik0xMy40NzQzIDQyLjQ3NjFDMTQuMzMzIDM0LjE2NjEgMTguMjUwNyAyNi40NjIzIDI0LjQ3NzQgMjAuODM5NEMzMC43MDQxIDE1LjIxNjUgMzguODAyMyAxMi4wNjk2IDQ3LjIyMTcgMTIuMDAxMlYxOS4zMTI1QzQwLjYyMjQgMTkuMzY2MiAzNC4zMzU1IDIxLjg1NzkgMjkuNDU1IDI2LjI2NTNDMjQuNTc0NCAzMC42NzI2IDIxLjU0OTMgMzYuNjExNSAyMC44NzYyIDQzLjEyNUwxMy40NzQzIDQyLjQ3NjFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTI3LjA2NjMgNDMuNjc0MUMyNy42MTg0IDM4LjcyNjIgMjkuOTYwNiAzNC4xNDI4IDMzLjY2MDcgMzAuNzY5NkMzNy4zNjA3IDI3LjM5NjQgNDIuMTY5IDI1LjQ2MTEgNDcuMTk4MyAyNS4zMjA3TDQ3LjIxNzcgMzEuOTY4OEM0My44MTgyIDMyLjA2MzcgNDAuNzM5MiAzMy40MDQ5IDM4LjIzODIgMzUuNjg0OUMzNS43MzcyIDM3Ljk2NSAzNC4yMzA2IDQwLjkwNTUgMzMuODU3NCA0NC4yNUwyNy4wNjYzIDQzLjY3NDFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik02OC45MzY1IDQ2LjE2MzVDNjQuNzQ0OCA1NC4zMjI4IDU4LjI3ODMgNjEuMDQ4NiA0OC43Mzk4IDY2LjQzMDRDNDUuODMzMiA2OC4wNjk5IDQyLjY0MjEgNjkuNTg1NyAzOS4xNDE4IDcwLjk3ODhDMzYuMjQxMyA3Mi4wMDcyIDMzLjc4MTcgNzEuMzA0NSAzMS42OTk3IDY5LjcxNDlDMzAuNTE2MSA2OC44MTEzIDI4Ljg3ODUgNjYuNzM4OCAyNy45MDA0IDY1LjQzNzFDMjYuMjQ4MSA2My4yMzggMjcuNDU0NiA2MS45OTY0IDI4LjgwNTEgNjAuMzcyN0MyOS45NzA4IDU4Ljk3MSAzMS41NTc1IDU3LjY0NzYgMzIuNjI2NSA1Ni40ODNDMzQuNDQ5NCA1NC40OTQ2IDM2LjIxODggNTMuNjU3OCAzOC4zNjg0IDU1Ljc1NDdDNDAuMzA3MiA1Ny42NDQzIDQyLjU3MSA2MC45MzggNDUuNTMzMiA1OC43OTk0QzUwLjAxMjMgNTUuNTY0NiA1NC42OTg3IDUxLjYwNzkgNTguMDkzOCA0Ny4xNzA5QzU5LjMzNDYgNDUuNTQ3NSA2MC4zNDcxIDQzLjY4OTEgNTguNjc1MyA0MS43OTU1TDU2LjIyODQgMzkuMDQ3MUM1My43MDg5IDM2LjIxNjMgNTQuODM1IDM1LjMwMiA1Ni45NjI4IDMzLjEzOTJMNjAuMjM5OCAyOS41NjI2QzYyLjAxMTEgMjcuMzg1OCA2My42NjM3IDI3LjAxNDUgNjUuMTM3NCAyNy42NjI1QzY2Ljk3ODQgMjguNDcxMSA3MC4yNjU1IDMyLjQ4NzggNzAuOTQ2OCAzNC4yNTMxQzcyLjQzMyAzOC4xMDQ2IDcwLjc0MDcgNDIuNjUzMyA2OC45MzY1IDQ2LjE2MzVaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTk0LjU3MjUgODguMzkyOUM5My41NjgyIDg4LjM5MjkgOTIuNjUyNSA4OC4xNTczIDkxLjgyNTUgODcuNjg2QzkxLjAxMzIgODcuMjE0NyA5MC4zNzA3IDg2LjU3NCA4OS44OTgxIDg1Ljc2NEM4OS40MjU1IDg0Ljk1NCA4OS4xODkyIDg0LjA0ODIgODkuMTg5MiA4My4wNDY4Qzg5LjE4OTIgODIuMDMwNiA4OS40MjU1IDgxLjExNzQgODkuODk4MSA4MC4zMDc0QzkwLjM3MDcgNzkuNDk3NCA5MS4wMTMyIDc4Ljg1NjggOTEuODI1NSA3OC4zODU1QzkyLjY1MjUgNzcuOTE0MiA5My41NjgyIDc3LjY3ODYgOTQuNTcyNSA3Ny42Nzg2Qzk1LjYwNjMgNzcuNjc4NiA5Ni41MjkzIDc3LjkxNDIgOTcuMzQxNiA3OC4zODU1Qzk4LjE1MzkgNzguODU2OCA5OC43OTYzIDc5LjQ5NzQgOTkuMjY4OSA4MC4zMDc0Qzk5Ljc1NjMgODEuMTE3NCAxMDAgODIuMDMwNiAxMDAgODMuMDQ2OEMxMDAgODQuMDYzIDk5Ljc1NjMgODQuOTc2MSA5OS4yNjg5IDg1Ljc4NjFDOTguNzk2MyA4Ni41ODE0IDk4LjE0NjUgODcuMjE0NyA5Ny4zMTk1IDg3LjY4NkM5Ni41MDcyIDg4LjE1NzMgOTUuNTkxNSA4OC4zOTI5IDk0LjU3MjUgODguMzkyOVpNOTQuNTk0NiA4Ny41NzU1Qzk1LjQ1MTIgODcuNTc1NSA5Ni4yMjY2IDg3LjM3NjYgOTYuOTIwNyA4Ni45NzlDOTcuNjE0OSA4Ni41NjY2IDk4LjE1MzkgODYuMDIxNyA5OC41Mzc5IDg1LjM0NDJDOTguOTM2NyA4NC42NTIgOTkuMTM2MSA4My44ODYyIDk5LjEzNjEgODMuMDQ2OEM5OS4xMzYxIDgyLjE5MjYgOTguOTM2NyA4MS40MjY3IDk4LjUzNzkgODAuNzQ5M0M5OC4xMzkyIDgwLjA1NzEgOTcuNTkyNyA3OS41MTIxIDk2Ljg5ODYgNzkuMTE0NUM5Ni4yMTkyIDc4LjcwMjEgOTUuNDUxMiA3OC40OTYgOTQuNTk0NiA3OC40OTZDOTMuNzUyOCA3OC40OTYgOTIuOTg0OCA3OC43MDIxIDkyLjI5MDcgNzkuMTE0NUM5MS41OTY1IDc5LjUxMjEgOTEuMDQyNyA4MC4wNTcxIDkwLjYyOTIgODAuNzQ5M0M5MC4yMzA0IDgxLjQyNjcgOTAuMDMxIDgyLjE5MjYgOTAuMDMxIDgzLjA0NjhDOTAuMDMxIDgzLjg4NjIgOTAuMjMwNCA4NC42NTIgOTAuNjI5MiA4NS4zNDQyQzkxLjA0MjcgODYuMDIxNyA5MS41ODkxIDg2LjU2NjYgOTIuMjY4NSA4Ni45NzlDOTIuOTYyNiA4Ny4zNzY2IDkzLjczOCA4Ny41NzU1IDk0LjU5NDYgODcuNTc1NVpNOTIuNjQ1MSA4NS45NDA3VjgwLjEzMDdIOTQuNTI4MkM5NS4xNzggODAuMTMwNyA5NS42ODAxIDgwLjI3MDcgOTYuMDM0NiA4MC41NTA1Qzk2LjQwMzggODAuODE1NiA5Ni41ODg0IDgxLjE5ODUgOTYuNTg4NCA4MS42OTkyQzk2LjU4ODQgODIuMjE0NyA5Ni4zNzQyIDgyLjY0OTEgOTUuOTQ1OSA4My4wMDI2Qzk1LjUzMjQgODMuMzQxMyA5NC45Nzg2IDgzLjUxMDcgOTQuMjg0NCA4My41MTA3SDkyLjY4OTRWODIuODkyMkg5NC4yODQ0Qzk0Ljc0MjMgODIuODkyMiA5NS4xMTE1IDgyLjc4MTYgOTUuMzkyMSA4Mi41NjA3Qzk1LjY3MjcgODIuMzI1MSA5NS44MTMxIDgyLjAzOCA5NS44MTMxIDgxLjY5OTJDOTUuODEzMSA4MS4zODk5IDk1LjY5NDkgODEuMTU0MyA5NS40NTg2IDgwLjk5MjJDOTUuMjM3IDgwLjgzMDIgOTQuOTI2OSA4MC43NDkzIDk0LjUyODIgODAuNzQ5M0g5My40MjA1Vjg1Ljk0MDdIOTIuNjQ1MVpNOTYuMTg5NyA4NS45NDA3TDk0LjM3MzEgODMuMTc5M0w5NS4wODIgODMuMTM1MUw5Ny4xMjAxIDg1Ljk0MDdIOTYuMTg5N1oiIGZpbGw9IndoaXRlIi8+CiAgPC9nPgo8L3N2Zz4K");
+  }
+
+  .cell {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    background-color: #222;
+    background-image: var(--cell-pattern), var(--cell-pattern), linear-gradient(135deg, #2b2b2b 39%, #101010 90%);
+    background-repeat: repeat, repeat, no-repeat;
+    background-size: 200px 200px, 200px 200px, cover;
+    background-position: 0 0, 100px 100px, 0 0;
+  }
+
+  /* бордовые (играбельные) клетки — увеличены и лежат выше чёрных */
+  .cell.maroon {
+    transform: scale(2);
+    z-index: 1;
+  }
+
+  .cell.maroon-dark {
+    background-color: #5c0018;
+    background-image: var(--cell-pattern), var(--cell-pattern), linear-gradient(135deg, #5c0018 39%, #82092c 90%);
+    background-repeat: repeat, repeat, no-repeat;
+    background-size: 200px 200px, 200px 200px, cover;
+    background-position: 0 0, 100px 100px, 0 0;
+  }
+
+  .cell.maroon-light {
+    background-color: #b0355c;
+    background-image: var(--cell-pattern), var(--cell-pattern), linear-gradient(135deg, #b0355c 39%, #d65d82 90%);
+    background-repeat: repeat, repeat, no-repeat;
+    background-size: 200px 200px, 200px 200px, cover;
+    background-position: 0 0, 100px 100px, 0 0;
+  }
+
+  .cell.maroon.drag-over {
+    outline: 3px solid #ffd54f;
+    outline-offset: -3px;
+  }
+  .cell:not(.maroon).drag-over {
+    outline: 3px solid #e53935;
+    outline-offset: -3px;
+  }
+  .cell.black-cell.drag-over {
+    outline: 3px solid #66bb6a;
+    outline-offset: -3px;
+  }
+
+  .tray {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #ddd;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    max-width: 720px;
+    justify-content: center;
+  }
+
+  /* фигуры лежат выше клеток */
+  .piece {
+    font-size: 44px;
+    line-height: 1;
+    cursor: grab;
+    user-select: none;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+  }
+
+  .piece[data-symbol="👺"] {
+    background: #e8f5e9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 0 0 2px #66bb6a;
+  }
+
+  .piece.dragging { opacity: 0.4; }
+
+  .constructor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: #ddd;
+    padding: 14px;
+    border-radius: 8px;
+    max-width: 640px;
+  }
+
+  .constructor-title {
+    font-weight: bold;
+    color: #333;
+    font-size: 15px;
+  }
+
+  .palette-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .palette-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .template-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .template-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    min-width: 52px;
+    border-radius: 6px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+    font-size: 10px;
+    color: #333;
+    transition: all 0.15s;
+  }
+  .template-btn:hover {
+    background: #f0f7ff;
+    border-color: #2196f3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(33,150,243,0.25);
+  }
+  .template-btn .tpl-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .character-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 10px;
+    min-width: 60px;
+    border-radius: 8px;
+    border: 2px solid #c9a0b0;
+    background: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    color: #4a1030;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .character-btn:hover {
+    background: #fdf0f5;
+    border-color: #b0355c;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(176,53,92,0.3);
+  }
+  .character-btn .char-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .part-palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    max-width: 340px;
+  }
+
+  .part-item {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: grab;
+    transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  }
+  .part-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    border-color: #2196f3;
+  }
+  .part-item.dragging { opacity: 0.4; }
+  .part-item svg {
+    display: block;
+    max-width: 38px;
+    max-height: 38px;
+    pointer-events: none;
+  }
+
+  .shape-palette {
+    display: flex;
+    gap: 14px;
+  }
+  .shape-item {
+    cursor: grab;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shape-item.dragging { opacity: 0.4; }
+
+  .shape-circle {
+    width: 22px; height: 22px; border-radius: 50%; background: #2196f3;
+  }
+  .shape-square {
+    width: 22px; height: 22px; background: #4caf50;
+  }
+  .shape-triangle {
+    width: 0; height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 22px solid #ff9800;
+  }
+
+  .shape-palette-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 320px;
+  }
+  .glyph-item {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: grab;
+    font-size: 22px;
+    line-height: 1;
+    color: #222;
+    user-select: none;
+    transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  }
+  .glyph-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    border-color: #2196f3;
+  }
+  .glyph-item.dragging { opacity: 0.4; }
+
+  .constructor-canvas {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px) 0 0 / 10px 10px,
+      linear-gradient(0deg,  rgba(0,0,0,0.06) 1px, transparent 1px) 0 0 / 10px 10px,
+      #fff;
+    border: 2px dashed #999;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .constructor-canvas.drag-over {
+    border-color: #2196f3;
+    background-color: #f0f7ff;
+  }
+
+  .canvas-shape {
+    position: absolute;
+    cursor: move;
+  }
+  .canvas-shape.canvas-part svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .canvas-shape.canvas-glyph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+    user-select: none;
+  }
+
+  .constructor-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .constructor-actions button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+  }
+  .constructor-actions button:hover {
+    background: #f0f7ff;
+    border-color: #2196f3;
+  }
+
+  /* фигура на клетке — выше фона клетки, но ниже маркеров */
+  .cell .piece {
+    box-shadow: none;
+    background: transparent;
+    transform: rotate(-45deg);
+    position: relative;
+    z-index: 10;
+  }
+
+  .cell-effect {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .effect-blood-old {
+    background:
+      radial-gradient(circle at 30% 35%, rgba(110,0,0,0.85) 0 11%, transparent 12%),
+      radial-gradient(circle at 65% 55%, rgba(110,0,0,0.75) 0 9%, transparent 10%),
+      radial-gradient(circle at 45% 78%, rgba(110,0,0,0.8) 0 7%, transparent 8%),
+      radial-gradient(circle at 75% 25%, rgba(110,0,0,0.6) 0 5%, transparent 6%);
+  }
+
+  .effect-blood-new {
+    background:
+      radial-gradient(circle at 40% 45%, rgba(255,255,255,0.18) 0 4%, transparent 8%),
+      radial-gradient(ellipse 48% 32% at 50% 58%, rgba(60,0,0,0.95) 0 55%, rgba(90,4,4,0.85) 60%, transparent 78%);
+  }
+
+  .effect-lightning-old {
+    background:
+      linear-gradient(115deg, transparent 44%, #fff9c4 47%, #ffffff 49%, #fff9c4 51%, transparent 54%),
+      linear-gradient(70deg, transparent 58%, #fff9c4 60%, #ffffff 62%, transparent 64%);
+    filter: drop-shadow(0 0 3px #fff59d);
+  }
+
+  .effect-lightning-new {
+    background:
+      repeating-conic-gradient(from 0deg, rgba(255,249,196,0.85) 0deg 2deg, transparent 2deg 30deg),
+      radial-gradient(circle at 50% 50%, #0c0c0c 0 12%, #2e2b26 12% 19%, transparent 20%);
+  }
+
+  .effect-cracks {
+    background:
+      repeating-linear-gradient(58deg, rgba(20,15,10,0.75) 0 2px, transparent 2px 16px),
+      repeating-linear-gradient(-42deg, rgba(20,15,10,0.6) 0 1.5px, transparent 1.5px 20px);
+  }
+
+  .cell-menu {
+    position: fixed;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    z-index: 1000;
+    font-size: 12px;
+    width: 230px;
+    transform: translate(-50%, -110%);
+  }
+  .cell-menu-title {
+    font-weight: bold;
+    margin: 6px 0 4px;
+    color: #333;
+  }
+  .cell-menu-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .cell-menu-row button {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1px solid #999;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .cell-menu-row button.reset-btn {
+    background: #eee;
+    color: #555;
+  }
+
+  .ability-btn {
+    width: 100%;
+    border-radius: 6px !important;
+    padding: 6px 8px;
+    font-size: 12px;
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    color: #6d3b00;
+    cursor: pointer;
+    text-align: center;
+  }
+  .ability-btn:hover {
+    background: #ffe0b2;
+  }
+  .ability-btn:disabled {
+    background: #eee;
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+  }
+
+  /* маркеры ходов/срубаний — накрывают всю клетку, чтобы по ним было
+     легко кликнуть, а сам значок рисуется внутри по центру */
+  .move-marker,
+  .capture-marker {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 30;             /* выше фигур (z-index: 10) */
+    pointer-events: auto;
+    margin: 0;
+  }
+  .move-marker svg,
+  .capture-marker svg {
+    display: block;
+    pointer-events: none;
+  }
+  .move-marker svg {
+    width: 20px;
+    height: 20px;
+  }
+  .capture-marker svg {
+    width: 46px;
+    height: 46px;
+  }
+  .move-marker:hover svg circle {
+    fill: rgba(76,175,80,1);
+  }
+  .capture-marker:hover svg circle {
+    stroke: #ff1744;
+    stroke-width: 3;
+  }
+  .capture-marker:hover svg line {
+    stroke: #ff1744;
+    stroke-width: 3;
+  }
+
+  .stack-badge {
+    position: absolute;
+    left: 2px; top: 2px;
+    min-width: 14px; height: 14px;
+    padding: 0 2px;
+    background: #fff;
+    color: #000;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 14px;
+    text-align: center;
+    pointer-events: none;
+    z-index: 20;
+    transform: rotate(-45deg);
+  }
+
+  .hint {
+    color: #555;
+    font-size: 14px;
+    max-width: 640px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- Общие градиенты для деталей фигур -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="pieceGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#5a5a5a"/>
+      <stop offset="50%"  stop-color="#2a2a2a"/>
+      <stop offset="100%" stop-color="#151515"/>
+    </linearGradient>
+    <linearGradient id="pieceGradLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#7a7a7a"/>
+      <stop offset="100%" stop-color="#3a3a3a"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="app-layout">
+
+  <div class="behavior-sidebar">
+    <div class="behavior-sidebar-title">Назначить поведение</div>
+    <div class="behavior-sidebar-hint">Перетащите любую фигуру сюда и отпустите — она "окунётся" и станет ходить как эта фигура, оставшись на месте</div>
+
+    <div class="behavior-group-label">Белые</div>
+    <div class="behavior-grid" id="behaviorGridWhite"></div>
+
+    <div class="behavior-group-label">Чёрные</div>
+    <div class="behavior-grid" id="behaviorGridBlack"></div>
+
+    <div class="behavior-group-label">Особые</div>
+    <div class="behavior-grid" id="behaviorGridSpecial"></div>
+  </div>
+
+  <div class="main-column">
+
+<div class="board" id="board"></div>
+
+<div class="tray" id="tray">
+  <div class="piece" draggable="true" data-symbol="♔">♔</div>
+  <div class="piece" draggable="true" data-symbol="♕">♕</div>
+  <div class="piece" draggable="true" data-symbol="♖">♖</div>
+  <div class="piece" draggable="true" data-symbol="♗">♗</div>
+  <div class="piece" draggable="true" data-symbol="♘">♘</div>
+  <div class="piece" draggable="true" data-symbol="♙">♙</div>
+  <div class="piece" draggable="true" data-symbol="♚">♚</div>
+  <div class="piece" draggable="true" data-symbol="♛">♛</div>
+  <div class="piece" draggable="true" data-symbol="♜">♜</div>
+  <div class="piece" draggable="true" data-symbol="♝">♝</div>
+  <div class="piece" draggable="true" data-symbol="♞">♞</div>
+  <div class="piece" draggable="true" data-symbol="♟">♟</div>
+  <div class="piece" draggable="true" data-symbol="👺">👺</div>
+</div>
+
+<div class="constructor">
+  <div class="constructor-title">Конструктор фигур</div>
+
+  <div class="palette-group">
+    <div class="palette-label">Быстрая сборка</div>
+    <div class="template-row" id="templateRow"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Персонажи</div>
+    <div class="template-row" id="characterRow"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Части фигур (перетащите на холст)</div>
+    <div class="part-palette" id="partPalette"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Простые формы</div>
+    <div class="shape-palette">
+      <div class="shape-item" draggable="true" data-shape="circle"><div class="shape-circle"></div></div>
+      <div class="shape-item" draggable="true" data-shape="square"><div class="shape-square"></div></div>
+      <div class="shape-item" draggable="true" data-shape="triangle"><div class="shape-triangle"></div></div>
+    </div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Символы</div>
+    <div class="shape-palette-row" id="glyphPalette"></div>
+  </div>
+
+  <div class="constructor-canvas" id="constructorCanvas"></div>
+  <div class="constructor-actions">
+    <button id="addToTrayBtn">Добавить в лоток</button>
+    <button id="clearCanvasBtn">Очистить</button>
+  </div>
+</div>
+
+<div class="hint">
+  Перетащите фигуру мышью на бордовую клетку (можно вернуть обратно в лоток).
+  Гоблина 👺 можно ставить и на чёрные клетки — они закрыты для всех остальных фигур.
+  Гоблин ходит по диагонали через любые клетки (и бордовые, и чёрные), а рубит только
+  «соседние» клетки своего цвета: с бордовой — бордовые, с чёрной — чёрные по вертикали/горизонтали.
+  Долгое нажатие на клетку открывает меню внешнего вида и способностей.
+</div>
+
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     ДОСКА
+     ============================================================ */
+  const board = document.getElementById('board');
+  const tray = document.getElementById('tray');
+  const rows = 9;
+  const cols = 9;
+
+  // 4x4 сетка "играбельных" (бордовых) клеток — используется для расчёта ходов фигур
+  const LATTICE_SIZE = 4;
+  const latticeGrid = Array.from({ length: LATTICE_SIZE }, () => Array(LATTICE_SIZE).fill(null));
+
+  // полная сетка всех отрисованных клеток (и бордовых, и чёрных) в координатах 9x9.
+  // нужна гоблину, который умеет ходить и по чёрным клеткам.
+  const gridCells = Array.from({ length: rows }, () => Array(cols).fill(null));
+
+  for (let row = 0; row < rows; row++) {
+    const isEvenLine = (row + 1) % 2 === 0;
+    for (let col = 0; col < cols; col++) {
+      if ((row + col) % 2 === 0) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.gridRow = row;
+        cell.dataset.gridCol = col;
+
+        if (isEvenLine) {
+          cell.classList.add('maroon');
+          const latticeRow = (row - 1) / 2;
+          const latticeCol = (col - 1) / 2;
+          const isDark = (latticeRow + latticeCol) % 2 === 0;
+          cell.classList.add(isDark ? 'maroon-dark' : 'maroon-light');
+          cell.dataset.latticeRow = latticeRow;
+          cell.dataset.latticeCol = latticeCol;
+          latticeGrid[latticeRow][latticeCol] = cell;
+        } else {
+          // "чёрная" клетка — обычные фигуры сюда ставить нельзя, только гоблина
+          cell.classList.add('black-cell');
+        }
+
+        gridCells[row][col] = cell;
+        cell.style.gridRowStart = row + 1;
+        cell.style.gridColumnStart = col + 1;
+        board.appendChild(cell);
+        setupDropZone(cell);
+        setupLongPress(cell);
+      }
+    }
+  }
+
+  /* ============================================================
+     DRAG & DROP ФИГУР НА ДОСКЕ
+     ============================================================ */
+  let draggedPiece = null;
+  let draggedSourceCell = null;
+
+  function setupDragForPiece(piece) {
+    piece.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', piece.dataset.symbol || 'piece');
+      e.dataTransfer.effectAllowed = 'copyMove';
+      draggedPiece = piece;
+      draggedSourceCell = piece.closest('.cell') || null;
+      setTimeout(() => piece.classList.add('dragging'), 0);
+    });
+    piece.addEventListener('dragend', () => {
+      piece.classList.remove('dragging');
+      draggedPiece = null;
+      draggedSourceCell = null;
+    });
+  }
+
+  function updateCellVisuals(cell) {
+    const stack = cell._stack || [];
+    stack.forEach((piece, idx) => {
+      piece.style.display = (idx === stack.length - 1) ? 'flex' : 'none';
+    });
+    let badge = cell.querySelector('.stack-badge');
+    if (stack.length >= 2) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'stack-badge';
+        cell.appendChild(badge);
+      }
+      badge.textContent = stack.length;
+    } else if (badge) {
+      badge.remove();
+    }
+  }
+
+  function removePieceFromCell(cell, piece) {
+    if (!cell || !cell._stack) return;
+    const idx = cell._stack.indexOf(piece);
+    if (idx !== -1) cell._stack.splice(idx, 1);
+    updateCellVisuals(cell);
+  }
+
+  /* ============================================================
+     ТИПЫ ФИГУР
+     ============================================================ */
+  const PIECE_TYPE_BY_SYMBOL = {
+    '♔': { color: 'white', type: 'king' },
+    '♕': { color: 'white', type: 'queen' },
+    '♖': { color: 'white', type: 'rook' },
+    '♗': { color: 'white', type: 'bishop' },
+    '♘': { color: 'white', type: 'knight' },
+    '♙': { color: 'white', type: 'pawn' },
+    '♚': { color: 'black', type: 'king' },
+    '♛': { color: 'black', type: 'queen' },
+    '♜': { color: 'black', type: 'rook' },
+    '♝': { color: 'black', type: 'bishop' },
+    '♞': { color: 'black', type: 'knight' },
+    '♟': { color: 'black', type: 'pawn' },
+    '👺': { color: 'goblin', type: 'goblin' }
+  };
+
+  // гоблин-эмодзи — U+1F47A; проверяем codePoint, чтобы не зависеть от
+  // возможных variation-selector'ов в строке
+  const GOBLIN_CODEPOINT = 0x1F47A;
+
+  function getPieceInfo(pieceEl) {
+    if (!pieceEl) return null;
+    // если фигуре было присвоено поведение — оно в приоритете
+    if (pieceEl.dataset.behaviorType && pieceEl.dataset.behaviorColor) {
+      return { type: pieceEl.dataset.behaviorType, color: pieceEl.dataset.behaviorColor };
+    }
+    const sym = pieceEl.dataset.symbol;
+    if (!sym) return null;
+    if (PIECE_TYPE_BY_SYMBOL[sym]) return PIECE_TYPE_BY_SYMBOL[sym];
+    if (sym.codePointAt(0) === GOBLIN_CODEPOINT) {
+      return { type: 'goblin', color: 'goblin' };
+    }
+    return null;
+  }
+
+  function topPieceAt(cell) {
+    if (!cell || !cell._stack || cell._stack.length === 0) return null;
+    return cell._stack[cell._stack.length - 1];
+  }
+
+  function occupantColorAtCell(cell) {
+    const top = topPieceAt(cell);
+    if (!top) return null;
+    const info = getPieceInfo(top);
+    return info ? info.color : 'unknown';
+  }
+
+  /* ============================================================
+     ХОДЫ ОБЫЧНЫХ ФИГУР
+     ============================================================ */
+  function occupantColorAt(r, c) {
+    return occupantColorAtCell(latticeGrid[r] && latticeGrid[r][c]);
+  }
+
+  function inLatticeBounds(r, c) {
+    return r >= 0 && r < LATTICE_SIZE && c >= 0 && c < LATTICE_SIZE;
+  }
+
+  const ORTHO_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  const DIAG_DIRS = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+  const KING_DIRS = ORTHO_DIRS.concat(DIAG_DIRS);
+  const KNIGHT_DIRS = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]];
+
+  function computeReachableMoves(fromRow, fromCol, type, color) {
+    const results = [];
+
+    function addSliding(dirs) {
+      dirs.forEach(([dr, dc]) => {
+        let r = fromRow + dr;
+        let c = fromCol + dc;
+        while (inLatticeBounds(r, c)) {
+          const occ = occupantColorAt(r, c);
+          if (!occ) {
+            results.push({ row: r, col: c, capture: false });
+          } else if (occ !== color) {
+            results.push({ row: r, col: c, capture: true });
+            break;
+          } else {
+            break;
+          }
+          r += dr;
+          c += dc;
+        }
+      });
+    }
+
+    function addStep(dirs) {
+      dirs.forEach(([dr, dc]) => {
+        const r = fromRow + dr;
+        const c = fromCol + dc;
+        if (!inLatticeBounds(r, c)) return;
+        const occ = occupantColorAt(r, c);
+        if (!occ) results.push({ row: r, col: c, capture: false });
+        else if (occ !== color) results.push({ row: r, col: c, capture: true });
+      });
+    }
+
+    if (type === 'rook') addSliding(ORTHO_DIRS);
+    else if (type === 'bishop') addSliding(DIAG_DIRS);
+    else if (type === 'queen') addSliding(KING_DIRS);
+    else if (type === 'king') addStep(KING_DIRS);
+    else if (type === 'knight') addStep(KNIGHT_DIRS);
+    else if (type === 'pawn') {
+      const dir = color === 'white' ? -1 : 1;
+      const r1 = fromRow + dir;
+      if (inLatticeBounds(r1, fromCol) && !occupantColorAt(r1, fromCol)) {
+        results.push({ row: r1, col: fromCol, capture: false });
+      }
+      [fromCol - 1, fromCol + 1].forEach((c) => {
+        if (inLatticeBounds(r1, c)) {
+          const occ = occupantColorAt(r1, c);
+          if (occ && occ !== color) results.push({ row: r1, col: c, capture: true });
+        }
+      });
+    }
+
+    return results;
+  }
+
+  /* ============================================================
+     СПОСОБНОСТИ ГОБЛИНА
+     ============================================================
+     • Ходит по диагонали — шаг (±1, ±1) сохраняет чётность row+col,
+       поэтому гоблин переходит с бордовой клетки на чёрную и обратно.
+       Скользит, пока путь свободен; наскоком не рубит.
+     • Рубит только «соседние» клетки того же цвета, что и текущая:
+       с бордовой клетки — бордовых соседей (шаг ±2 по одной оси),
+       с чёрной клетки  — чёрных соседей (тоже шаг ±2 по одной оси).
+     ============================================================ */
+  const GOBLIN_DIAG_DIRS  = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+  const GOBLIN_STRIKE_DIRS = [[-2, 0], [2, 0], [0, -2], [0, 2]];
+
+  function computeGoblinMoves(gridRow, gridCol) {
+    const results = [];
+    for (const [dr, dc] of GOBLIN_DIAG_DIRS) {
+      let r = gridRow + dr;
+      let c = gridCol + dc;
+      while (r >= 0 && r < rows && c >= 0 && c < cols) {
+        const cell = gridCells[r][c];
+        if (!cell) break;
+        if (topPieceAt(cell)) break;
+        results.push({ gridRow: r, gridCol: c });
+        r += dr;
+        c += dc;
+      }
+    }
+    return results;
+  }
+
+  function computeGoblinStrikes(gridRow, gridCol, goblinColor) {
+    const results = [];
+    for (const [dr, dc] of GOBLIN_STRIKE_DIRS) {
+      const r = gridRow + dr;
+      const c = gridCol + dc;
+      if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+      const cell = gridCells[r][c];
+      if (!cell) continue;
+      const top = topPieceAt(cell);
+      if (!top) continue;
+      const tInfo = getPieceInfo(top);
+      const tColor = tInfo ? tInfo.color : 'unknown';
+      // гоблин не бьёт своих (другого гоблина без переназначенного поведения)
+      if (tColor !== goblinColor) {
+        results.push({ gridRow: r, gridCol: c });
+      }
+    }
+    return results;
+  }
+
+  /* ============================================================
+     МАРКЕРЫ ХОДОВ/СРУБАНИЙ
+     ============================================================ */
+  const MOVE_MARKER_SVG =
+    '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="10" cy="10" r="6" fill="rgba(76,175,80,0.7)" stroke="#ffffff" stroke-width="1.5"/>' +
+    '</svg>';
+
+  const CAPTURE_MARKER_SVG =
+    '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="10" cy="10" r="8.3" fill="none" stroke="#e53935" stroke-width="2.2"/>' +
+    '<line x1="5.2" y1="5.2" x2="14.8" y2="14.8" stroke="#e53935" stroke-width="2"/>' +
+    '<line x1="14.8" y1="5.2" x2="5.2" y2="14.8" stroke="#e53935" stroke-width="2"/>' +
+    '</svg>';
+
+  let abilityMode = null;
+  let abilityCancelHandler = null;
+
+  function clearAbilityMode() {
+    document.querySelectorAll('.move-marker, .capture-marker').forEach((el) => el.remove());
+    if (abilityCancelHandler) {
+      document.removeEventListener('mousedown', abilityCancelHandler, true);
+      abilityCancelHandler = null;
+    }
+    abilityMode = null;
+  }
+
+  function activateAbilityMode(cell) {
+    clearAbilityMode();
+
+    const topPiece = topPieceAt(cell);
+    if (!topPiece) return;
+    const info = getPieceInfo(topPiece);
+    if (!info) return;
+
+    const entries = [];
+
+    if (info.type === 'goblin') {
+      const gr = parseInt(cell.dataset.gridRow, 10);
+      const gc = parseInt(cell.dataset.gridCol, 10);
+      if (Number.isNaN(gr) || Number.isNaN(gc)) return;
+
+      computeGoblinMoves(gr, gc).forEach((m) => {
+        entries.push({ cell: gridCells[m.gridRow][m.gridCol], capture: false, strike: false });
+      });
+      computeGoblinStrikes(gr, gc, info.color).forEach((s) => {
+        entries.push({ cell: gridCells[s.gridRow][s.gridCol], capture: true, strike: true });
+      });
+    } else {
+      if (cell.dataset.latticeRow === undefined) return;
+      const fromRow = parseInt(cell.dataset.latticeRow, 10);
+      const fromCol = parseInt(cell.dataset.latticeCol, 10);
+      computeReachableMoves(fromRow, fromCol, info.type, info.color).forEach((m) => {
+        entries.push({ cell: latticeGrid[m.row][m.col], capture: m.capture, strike: false });
+      });
+    }
+
+    if (entries.length === 0) return;
+
+    abilityMode = { sourceCell: cell, piece: topPiece };
+
+    entries.forEach(({ cell: targetCell, capture, strike }) => {
+      if (!targetCell) return;
+
+      const marker = document.createElement('div');
+      marker.className = capture ? 'capture-marker' : 'move-marker';
+      marker.innerHTML = capture ? CAPTURE_MARKER_SVG : MOVE_MARKER_SVG;
+      if (strike) marker.title = 'Удар по соседней клетке (гоблин остаётся на месте)';
+
+      // гасим события до клика, чтобы не сработала отмена режима
+      marker.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      });
+      // и на всякий случай — click тоже с остановкой всплытия
+      marker.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        performAbilityMove(targetCell, capture, strike);
+      });
+
+      targetCell.appendChild(marker);
+    });
+
+    // клик мимо маркеров — отмена режима без хода
+    setTimeout(() => {
+      abilityCancelHandler = (e) => {
+        if (!e.target.closest('.move-marker') && !e.target.closest('.capture-marker')) {
+          clearAbilityMode();
+        }
+      };
+      document.addEventListener('mousedown', abilityCancelHandler, true);
+    }, 0);
+  }
+
+  function performAbilityMove(targetCell, isCapture, isStrike) {
+    if (!abilityMode) return;
+    const { sourceCell, piece } = abilityMode;
+
+    // Гоблин «рубит» соседнюю клетку, не сходя с места
+    if (isStrike) {
+      const targetStack = targetCell._stack || [];
+      const captured = targetStack[targetStack.length - 1];
+      if (captured) {
+        const idx = targetStack.indexOf(captured);
+        if (idx !== -1) targetStack.splice(idx, 1);
+        captured.remove();
+        updateCellVisuals(targetCell);
+      }
+      clearAbilityMode();
+      return;
+    }
+
+    // обычный ход — убираем фигуру с исходной клетки
+    removePieceFromCell(sourceCell, piece);
+
+    if (isCapture) {
+      const targetStack = targetCell._stack || [];
+      const captured = targetStack[targetStack.length - 1];
+      if (captured) {
+        const idx = targetStack.indexOf(captured);
+        if (idx !== -1) targetStack.splice(idx, 1);
+        captured.remove();
+      }
+    }
+
+    targetCell._stack = targetCell._stack || [];
+    targetCell.appendChild(piece);
+    targetCell._stack.push(piece);
+    updateCellVisuals(targetCell);
+
+    clearAbilityMode();
+  }
+
+  /* ============================================================
+     ПРАВИЛА ДОПУСКА ФИГУР НА КЛЕТКИ
+     ============================================================ */
+  function pieceIsGoblin(piece) {
+    const info = getPieceInfo(piece);
+    return !!info && info.type === 'goblin';
+  }
+
+  function cellAcceptsPiece(cell, piece) {
+    if (cell.classList.contains('maroon')) return true;
+    if (cell.classList.contains('black-cell')) return pieceIsGoblin(piece);
+    return false;
+  }
+
+  function setupDropZone(cell) {
+    cell._stack = [];
+    cell.addEventListener('dragover', (e) => {
+      if (!draggedPiece) return;
+      if (cellAcceptsPiece(cell, draggedPiece)) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      } else {
+        e.dataTransfer.dropEffect = 'none';
+      }
+      cell.classList.add('drag-over');
+    });
+    cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
+    cell.addEventListener('drop', (e) => {
+      e.preventDefault();
+      cell.classList.remove('drag-over');
+      if (!draggedPiece) return;
+      if (!cellAcceptsPiece(cell, draggedPiece)) return;
+      if (draggedSourceCell === cell) return;
+      if (draggedSourceCell) removePieceFromCell(draggedSourceCell, draggedPiece);
+      cell.appendChild(draggedPiece);
+      cell._stack.push(draggedPiece);
+      updateCellVisuals(cell);
+    });
+  }
+
+  Array.from(tray.querySelectorAll('.piece')).forEach(setupDragForPiece);
+
+  tray.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  });
+  tray.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (!draggedPiece) return;
+    if (draggedSourceCell) removePieceFromCell(draggedSourceCell, draggedPiece);
+    draggedPiece.style.display = 'flex';
+    tray.appendChild(draggedPiece);
+  });
+
+  /* ============================================================
+     ЛОТКИ ПРИСВОЕНИЯ ПОВЕДЕНИЯ
+     ============================================================ */
+  const PIECE_LABELS = {
+    king: 'Король', queen: 'Ферзь', rook: 'Ладья',
+    bishop: 'Слон', knight: 'Конь', pawn: 'Пешка',
+    goblin: 'Гоблин'
+  };
+  const COLOR_LABELS = { white: 'белый', black: 'чёрный', goblin: 'нейтральный' };
+
+  const behaviorGridWhite = document.getElementById('behaviorGridWhite');
+  const behaviorGridBlack = document.getElementById('behaviorGridBlack');
+  const behaviorGridSpecial = document.getElementById('behaviorGridSpecial');
+
+  function assignBehaviorToPiece(piece, type, color) {
+    piece.dataset.behaviorType = type;
+    piece.dataset.behaviorColor = color;
+    piece.title = 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')';
+
+    piece.classList.add('behavior-marked');
+
+    piece.classList.remove('behavior-glow');
+    void piece.offsetWidth;
+    piece.classList.add('behavior-glow');
+    piece.addEventListener('animationend', function onGlowEnd(ev) {
+      if (ev.animationName === 'pieceBehaviorGlow') {
+        piece.classList.remove('behavior-glow');
+        piece.removeEventListener('animationend', onGlowEnd);
+      }
+    });
+
+    showBehaviorToast(piece, 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')');
+  }
+
+  function showBehaviorToast(piece, text) {
+    const rect = piece.getBoundingClientRect();
+    const toast = document.createElement('div');
+    toast.className = 'behavior-toast';
+    toast.textContent = text;
+    const left = Math.min(Math.max(rect.left + rect.width / 2, 70), window.innerWidth - 70);
+    const top = Math.max(rect.top, 30);
+    toast.style.left = left + 'px';
+    toast.style.top = top + 'px';
+    document.body.appendChild(toast);
+    toast.addEventListener('animationend', () => toast.remove());
+    setTimeout(() => toast.remove(), 2200);
+  }
+
+  Object.entries(PIECE_TYPE_BY_SYMBOL).forEach(([symbol, info]) => {
+    const slot = document.createElement('div');
+    slot.className = 'behavior-slot';
+    slot.textContent = symbol;
+    slot.dataset.behaviorType = info.type;
+    slot.dataset.behaviorColor = info.color;
+    slot.title = PIECE_LABELS[info.type] + ' (' + COLOR_LABELS[info.color] + ') — окуните сюда фигуру';
+
+    slot.addEventListener('dragover', (e) => {
+      if (!draggedPiece) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      slot.classList.add('drag-over');
+    });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if (!draggedPiece) return;
+
+      assignBehaviorToPiece(draggedPiece, info.type, info.color);
+
+      slot.classList.remove('assigned-flash');
+      void slot.offsetWidth;
+      slot.classList.add('assigned-flash');
+    });
+
+    const targetGrid =
+      info.color === 'white' ? behaviorGridWhite :
+      info.color === 'black' ? behaviorGridBlack :
+      behaviorGridSpecial;
+    targetGrid.appendChild(slot);
+  });
+
+  /* ============================================================
+     МЕНЮ КЛЕТКИ (долгое нажатие)
+     ============================================================ */
+  const colorPresets = {
+    burnt: 'linear-gradient(135deg, #5a2d0c, #1c0d04)',
+    frost: 'linear-gradient(135deg, #6f8fa6, #dff1f7)',
+    snow:  'linear-gradient(135deg, #ffffff, #cfe3f0)',
+    swampOld: 'linear-gradient(135deg, #3a4a2f, #6b7a2f)',
+    swampNew:
+      'radial-gradient(ellipse 30% 20% at 30% 62%, rgba(60,95,115,0.9) 0 60%, transparent 72%), ' +
+      'radial-gradient(ellipse 24% 16% at 72% 32%, rgba(60,95,115,0.85) 0 60%, transparent 72%), ' +
+      'radial-gradient(circle at 20% 22%, rgba(95,130,45,0.85) 0 20%, transparent 24%), ' +
+      'radial-gradient(circle at 76% 72%, rgba(95,130,45,0.75) 0 16%, transparent 21%), ' +
+      'linear-gradient(135deg, #3a4a2f, #55621f)'
+  };
+  const colorLabels = {
+    burnt: 'Выжженная земля', frost: 'Морозная земля', snow: 'Снег',
+    swampOld: 'Болото (зелень)', swampNew: 'Болото (вода и мох)'
+  };
+  const effectLabels = {
+    'blood-old': 'Кровь: брызги', 'blood-new': 'Кровь: лужа',
+    'lightning-old': 'Молния: линии', 'lightning-new': 'Молния: след удара (кратер)',
+    cracks: 'Потрескавшаяся земля'
+  };
+
+  function setCellColor(cell, presetName) {
+    if (presetName && colorPresets[presetName]) {
+      cell.style.backgroundImage = colorPresets[presetName];
+      cell.style.backgroundColor = '';
+      cell.style.backgroundRepeat = 'no-repeat';
+      cell.style.backgroundSize = 'cover';
+      cell.style.backgroundPosition = 'center';
+    } else {
+      cell.style.backgroundImage = '';
+      cell.style.backgroundColor = '';
+      cell.style.backgroundRepeat = '';
+      cell.style.backgroundSize = '';
+      cell.style.backgroundPosition = '';
+    }
+  }
+  function setCellEffect(cell, effectName) {
+    const existing = cell.querySelector('.cell-effect');
+    if (existing) existing.remove();
+    if (effectName && effectLabels[effectName]) {
+      const overlay = document.createElement('div');
+      overlay.className = 'cell-effect effect-' + effectName;
+      cell.insertBefore(overlay, cell.firstChild);
+    }
+  }
+
+  let closeMenuHandler = null;
+  function closeCellMenu() {
+    const menu = document.querySelector('.cell-menu');
+    if (menu) menu.remove();
+    if (closeMenuHandler) {
+      document.removeEventListener('mousedown', closeMenuHandler);
+      closeMenuHandler = null;
+    }
+  }
+  function openCellMenu(cell, x, y) {
+    closeCellMenu();
+    const menu = document.createElement('div');
+    menu.className = 'cell-menu';
+    menu.style.left = x + 'px';
+    menu.style.top = y + 'px';
+
+    const colorTitle = document.createElement('div');
+    colorTitle.className = 'cell-menu-title';
+    colorTitle.textContent = 'Цвет поля';
+    const colorRow = document.createElement('div');
+    colorRow.className = 'cell-menu-row';
+    Object.keys(colorPresets).forEach((key) => {
+      const btn = document.createElement('button');
+      btn.title = colorLabels[key];
+      btn.style.backgroundImage = colorPresets[key];
+      btn.addEventListener('click', () => { setCellColor(cell, key); closeCellMenu(); });
+      colorRow.appendChild(btn);
+    });
+    const resetColorBtn = document.createElement('button');
+    resetColorBtn.className = 'reset-btn';
+    resetColorBtn.title = 'Сбросить цвет';
+    resetColorBtn.textContent = '✕';
+    resetColorBtn.addEventListener('click', () => { setCellColor(cell, null); closeCellMenu(); });
+    colorRow.appendChild(resetColorBtn);
+
+    const effectTitle = document.createElement('div');
+    effectTitle.className = 'cell-menu-title';
+    effectTitle.textContent = 'Эффект';
+    const effectRow = document.createElement('div');
+    effectRow.className = 'cell-menu-row';
+    const effectIcons = { 'blood-old': '🩸', 'blood-new': '🟥', 'lightning-old': '⚡', 'lightning-new': '🕳️', cracks: '🪨' };
+    Object.keys(effectLabels).forEach((key) => {
+      const btn = document.createElement('button');
+      btn.title = effectLabels[key];
+      btn.textContent = effectIcons[key];
+      btn.addEventListener('click', () => { setCellEffect(cell, key); closeCellMenu(); });
+      effectRow.appendChild(btn);
+    });
+    const resetEffectBtn = document.createElement('button');
+    resetEffectBtn.className = 'reset-btn';
+    resetEffectBtn.title = 'Убрать эффект';
+    resetEffectBtn.textContent = '✕';
+    resetEffectBtn.addEventListener('click', () => { setCellEffect(cell, null); closeCellMenu(); });
+    effectRow.appendChild(resetEffectBtn);
+
+    menu.appendChild(colorTitle);
+    menu.appendChild(colorRow);
+    menu.appendChild(effectTitle);
+    menu.appendChild(effectRow);
+
+    const topPiece = topPieceAt(cell);
+    const pieceInfo = topPiece ? getPieceInfo(topPiece) : null;
+    if (topPiece) {
+      const abilityTitle = document.createElement('div');
+      abilityTitle.className = 'cell-menu-title';
+      abilityTitle.textContent = 'Фигура на клетке';
+
+      const abilityRow = document.createElement('div');
+      abilityRow.className = 'cell-menu-row';
+
+      const abilityBtn = document.createElement('button');
+      abilityBtn.className = 'ability-btn';
+      abilityBtn.textContent = '⚔️ Способности фигуры';
+      if (!pieceInfo) {
+        abilityBtn.disabled = true;
+        abilityBtn.title = 'Для этой фигуры пока не заданы правила ходов';
+      } else {
+        abilityBtn.addEventListener('click', () => {
+          closeCellMenu();
+          activateAbilityMode(cell);
+        });
+      }
+      abilityRow.appendChild(abilityBtn);
+
+      menu.appendChild(abilityTitle);
+      menu.appendChild(abilityRow);
+    }
+
+    document.body.appendChild(menu);
+
+    closeMenuHandler = (e) => { if (!menu.contains(e.target)) closeCellMenu(); };
+    setTimeout(() => document.addEventListener('mousedown', closeMenuHandler), 0);
+  }
+
+  function setupLongPress(cell) {
+    let timer = null;
+    const cancel = () => { if (timer) { clearTimeout(timer); timer = null; } };
+    cell.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      timer = setTimeout(() => openCellMenu(cell, e.clientX, e.clientY), 550);
+    });
+    cell.addEventListener('dragstart', cancel);
+    cell.addEventListener('mouseup', cancel);
+    cell.addEventListener('mouseleave', cancel);
+  }
+
+  /* ============================================================
+     КОНСТРУКТОР ФИГУР
+     ============================================================ */
+
+  const pieceParts = {
+    base: {
+      label: 'Основание',
+      w: 38, h: 9,
+      svg: `<svg viewBox="0 0 38 9" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 9 L6 3 L32 3 L36 9 Z" fill="url(#pieceGrad)"/>
+        <path d="M1 3 L5 0 L33 0 L37 3 Z" fill="url(#pieceGradLight)"/>
+        <path d="M5 0 L33 0" stroke="#8a8a8a" stroke-width="0.4" opacity="0.6"/>
+      </svg>`
+    },
+    baseWide: {
+      label: 'Широкое основание',
+      w: 46, h: 9,
+      svg: `<svg viewBox="0 0 46 9" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 9 L7 3 L39 3 L44 9 Z" fill="url(#pieceGrad)"/>
+        <path d="M1 3 L6 0 L40 0 L45 3 Z" fill="url(#pieceGradLight)"/>
+        <path d="M6 0 L40 0" stroke="#8a8a8a" stroke-width="0.4" opacity="0.6"/>
+      </svg>`
+    },
+    stem: {
+      label: 'Ножка',
+      w: 12, h: 16,
+      svg: `<svg viewBox="0 0 12 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 0 Q1 8 2 16 L10 16 Q11 8 10 0 Z" fill="url(#pieceGrad)"/>
+        <path d="M4 0 Q3.5 8 4.5 16" stroke="#8a8a8a" stroke-width="0.5" fill="none" opacity="0.5"/>
+      </svg>`
+    },
+    stemShort: {
+      label: 'Короткая ножка',
+      w: 12, h: 12,
+      svg: `<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 0 Q1 6 2 12 L10 12 Q11 6 10 0 Z" fill="url(#pieceGrad)"/>
+        <path d="M4 0 Q3.5 6 4.5 12" stroke="#8a8a8a" stroke-width="0.5" fill="none" opacity="0.5"/>
+      </svg>`
+    },
+    ball: {
+      label: 'Шар',
+      w: 14, h: 14,
+      svg: `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="7" cy="7" r="6.5" fill="url(#pieceGrad)"/>
+        <circle cx="4.5" cy="4.5" r="2" fill="#fff" opacity="0.25"/>
+      </svg>`
+    },
+    ballLarge: {
+      label: 'Большой шар',
+      w: 18, h: 18,
+      svg: `<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="9" cy="9" r="8.5" fill="url(#pieceGrad)"/>
+        <circle cx="5.8" cy="5.8" r="2.6" fill="#fff" opacity="0.25"/>
+      </svg>`
+    },
+    collar: {
+      label: 'Воротник',
+      w: 22, h: 5,
+      svg: `<svg viewBox="0 0 22 5" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="11" cy="2.5" rx="10.5" ry="2.5" fill="url(#pieceGrad)"/>
+        <ellipse cx="11" cy="1.5" rx="8.5" ry="1.2" fill="#8a8a8a" opacity="0.4"/>
+      </svg>`
+    },
+    crown: {
+      label: 'Корона',
+      w: 26, h: 12,
+      svg: `<svg viewBox="0 0 26 12" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 12 L3 5 L7 8 L13 1 L19 8 L23 5 L25 12 Z" fill="url(#pieceGrad)"/>
+        <circle cx="3" cy="4" r="1.4" fill="url(#pieceGradLight)"/>
+        <circle cx="13" cy="1" r="1.4" fill="url(#pieceGradLight)"/>
+        <circle cx="23" cy="4" r="1.4" fill="url(#pieceGradLight)"/>
+      </svg>`
+    },
+    cross: {
+      label: 'Крест',
+      w: 10, h: 14,
+      svg: `<svg viewBox="0 0 10 14" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.5 0 H6.5 V3.5 H10 V6.5 H6.5 V14 H3.5 V6.5 H0 V3.5 H3.5 Z" fill="url(#pieceGrad)"/>
+      </svg>`
+    },
+    mitre: {
+      label: 'Митра (слон)',
+      w: 16, h: 18,
+      svg: `<svg viewBox="0 0 16 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 0 Q15 6 15 14 Q15 17 13 18 L3 18 Q1 17 1 14 Q1 6 8 0 Z" fill="url(#pieceGrad)"/>
+        <path d="M8 4 L8 15" stroke="#e8e8e8" stroke-width="1.2" opacity="0.6"/>
+      </svg>`
+    },
+    knightHead: {
+      label: 'Голова коня',
+      w: 20, h: 20,
+      svg: `<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 20 L4 13 Q1 11 2 7 Q3 3 7 2 L9 0 L11 3 L13 1 L14 3 L13 5 Q17 7 18 13 L19 20 Z" fill="url(#pieceGrad)"/>
+        <circle cx="13" cy="9" r="1.2" fill="#e8e8e8"/>
+      </svg>`
+    },
+    rookTop: {
+      label: 'Зубцы ладьи',
+      w: 24, h: 9,
+      svg: `<svg viewBox="0 0 24 9" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 9 L0 1 L4 1 L4 4 L6 4 L6 1 L10 1 L10 4 L12 4 L12 1 L16 1 L16 4 L18 4 L18 1 L22 1 L22 4 L24 4 L24 9 Z" fill="url(#pieceGrad)"/>
+      </svg>`
+    },
+    spike: {
+      label: 'Острие',
+      w: 10, h: 12,
+      svg: `<svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 0 L8 7 L7 12 L3 12 L2 7 Z" fill="url(#pieceGrad)"/>
+      </svg>`
+    },
+    head: {
+      label: 'Голова',
+      w: 12, h: 14,
+      svg: `<svg viewBox="0 0 12 14" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="5.5" r="5" fill="url(#pieceGradLight)"/>
+        <rect x="4" y="9" width="4" height="5" fill="url(#pieceGrad)"/>
+        <circle cx="4.2" cy="5.3" r="0.7" fill="#222"/>
+        <circle cx="7.8" cy="5.3" r="0.7" fill="#222"/>
+        <path d="M4.5 7.7 Q6 8.6 7.5 7.7" stroke="#7a3030" stroke-width="0.5" fill="none"/>
+      </svg>`
+    },
+    hairLong: {
+      label: 'Голова с волосами',
+      w: 18, h: 22,
+      svg: `<svg viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6 Q3 1 9 1 Q15 1 15 6 L15.5 20 Q14 18 13 16 L13 21 Q11 19.5 9 19.5 Q7 19.5 5 21 L5 16 Q4 18 2.5 20 Z" fill="#3a1f10"/>
+        <circle cx="9" cy="8" r="4.5" fill="url(#pieceGradLight)"/>
+        <path d="M4.5 5.5 Q9 -1 13.5 5.5 Q12 4 9 4.2 Q6 4 4.5 5.5 Z" fill="#3a1f10"/>
+        <circle cx="7.3" cy="8" r="0.6" fill="#222"/>
+        <circle cx="10.7" cy="8" r="0.6" fill="#222"/>
+        <path d="M7.8 10 Q9 10.8 10.2 10" stroke="#c06060" stroke-width="0.5" fill="none"/>
+        <rect x="7" y="12.5" width="4" height="4" fill="url(#pieceGradLight)"/>
+      </svg>`
+    },
+    arms: {
+      label: 'Руки',
+      w: 30, h: 5,
+      svg: `<svg viewBox="0 0 30 5" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="1.5" width="26" height="2" rx="1" fill="url(#pieceGrad)"/>
+        <circle cx="2" cy="2.5" r="2" fill="url(#pieceGrad)"/>
+        <circle cx="28" cy="2.5" r="2" fill="url(#pieceGrad)"/>
+      </svg>`
+    },
+    flowerHead: {
+      label: 'Цветок',
+      w: 22, h: 22,
+      svg: `<svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="4" r="4" fill="#e07ab8"/>
+        <circle cx="18" cy="11" r="4" fill="#e07ab8"/>
+        <circle cx="11" cy="18" r="4" fill="#e07ab8"/>
+        <circle cx="4" cy="11" r="4" fill="#e07ab8"/>
+        <circle cx="11" cy="11" r="3.5" fill="#ffd54f"/>
+        <circle cx="11" cy="11" r="1.5" fill="#f57c00"/>
+      </svg>`
+    },
+    hat: {
+      label: 'Шляпа',
+      w: 24, h: 9,
+      svg: `<svg viewBox="0 0 24 9" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="12" cy="7" rx="11.5" ry="1.8" fill="url(#pieceGrad)"/>
+        <path d="M5 7 L5 3 Q12 -1 19 3 L19 7 Z" fill="url(#pieceGrad)"/>
+        <rect x="5" y="5.5" width="14" height="1" fill="#8a8a8a" opacity="0.6"/>
+      </svg>`
+    },
+    skirt: {
+      label: 'Юбка',
+      w: 26, h: 16,
+      svg: `<svg viewBox="0 0 26 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 0 L18 0 L26 16 L0 16 Z" fill="url(#pieceGrad)"/>
+        <path d="M13 0 L13 16" stroke="#8a8a8a" stroke-width="0.4" opacity="0.4"/>
+      </svg>`
+    }
+  };
+
+  const pieceTemplates = {
+    pawn: {
+      label: 'Пешка', icon: '♙',
+      parts: [
+        { part: 'base',      x: 11, y: 51 },
+        { part: 'collar',    x: 19, y: 46 },
+        { part: 'stem',      x: 24, y: 30 },
+        { part: 'ball',      x: 23, y: 16 }
+      ]
+    },
+    rook: {
+      label: 'Ладья', icon: '♖',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'collar',    x: 19, y: 46 },
+        { part: 'stem',      x: 24, y: 30 },
+        { part: 'rookTop',   x: 18, y: 21 }
+      ]
+    },
+    knight: {
+      label: 'Конь', icon: '♘',
+      parts: [
+        { part: 'baseWide',   x: 7,  y: 51 },
+        { part: 'collar',     x: 19, y: 46 },
+        { part: 'knightHead', x: 20, y: 26 }
+      ]
+    },
+    bishop: {
+      label: 'Слон', icon: '♗',
+      parts: [
+        { part: 'baseWide', x: 7,  y: 51 },
+        { part: 'collar',   x: 19, y: 46 },
+        { part: 'stem',     x: 24, y: 30 },
+        { part: 'mitre',    x: 22, y: 12 }
+      ]
+    },
+    queen: {
+      label: 'Ферзь', icon: '♕',
+      parts: [
+        { part: 'baseWide', x: 7,  y: 51 },
+        { part: 'collar',   x: 19, y: 46 },
+        { part: 'stem',     x: 24, y: 30 },
+        { part: 'collar',   x: 19, y: 25 },
+        { part: 'crown',    x: 17, y: 13 }
+      ]
+    },
+    king: {
+      label: 'Король', icon: '♔',
+      parts: [
+        { part: 'baseWide',   x: 7,  y: 51 },
+        { part: 'collar',     x: 19, y: 46 },
+        { part: 'stemShort',  x: 24, y: 34 },
+        { part: 'collar',     x: 19, y: 29 },
+        { part: 'crown',      x: 17, y: 17 },
+        { part: 'cross',      x: 25, y: 3  }
+      ]
+    }
+  };
+
+  const characterTemplates = {
+    irina: {
+      label: 'Ирина',
+      icon: '👩',
+      parts: [
+        { part: 'baseWide', x: 7,  y: 51 },
+        { part: 'skirt',    x: 17, y: 35 },
+        { part: 'collar',   x: 19, y: 30 },
+        { part: 'stemShort',x: 24, y: 22 },
+        { part: 'arms',     x: 15, y: 21 },
+        { part: 'collar',   x: 19, y: 18 },
+        { part: 'hairLong', x: 21, y: 0  }
+      ]
+    },
+    iris: {
+      label: 'Ирис',
+      icon: '🌸',
+      parts: [
+        { part: 'base',       x: 11, y: 51 },
+        { part: 'stem',       x: 24, y: 34 },
+        { part: 'collar',     x: 19, y: 29 },
+        { part: 'flowerHead', x: 19, y: 8  }
+      ]
+    },
+    kostya: {
+      label: 'Костя',
+      icon: '🤴',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'collar',    x: 19, y: 46 },
+        { part: 'stemShort', x: 24, y: 34 },
+        { part: 'arms',      x: 15, y: 32 },
+        { part: 'collar',    x: 19, y: 29 },
+        { part: 'head',      x: 24, y: 16 },
+        { part: 'crown',     x: 17, y: 4  }
+      ]
+    },
+    steve: {
+      label: 'Стив',
+      icon: '🕵️',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'collar',    x: 19, y: 46 },
+        { part: 'stemShort', x: 24, y: 34 },
+        { part: 'arms',      x: 15, y: 32 },
+        { part: 'collar',    x: 19, y: 29 },
+        { part: 'head',      x: 24, y: 16 },
+        { part: 'hat',       x: 18, y: 5  }
+      ]
+    }
+  };
+
+  const constructorCanvas = document.getElementById('constructorCanvas');
+  const addToTrayBtn = document.getElementById('addToTrayBtn');
+  const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+
+  const partPalette = document.getElementById('partPalette');
+  Object.entries(pieceParts).forEach(([id, part]) => {
+    const item = document.createElement('div');
+    item.className = 'part-item';
+    item.draggable = true;
+    item.dataset.shape = 'part';
+    item.dataset.part = id;
+    item.title = part.label;
+    item.innerHTML = part.svg;
+    partPalette.appendChild(item);
+  });
+
+  const glyphPalette = document.getElementById('glyphPalette');
+  ['♔','♕','♖','♗','♘','♙','♚','♛','♜','♝','♞','♟'].forEach((sym) => {
+    const item = document.createElement('div');
+    item.className = 'glyph-item';
+    item.draggable = true;
+    item.dataset.shape = 'glyph';
+    item.dataset.symbol = sym;
+    item.textContent = sym;
+    item.title = 'Символ ' + sym;
+    glyphPalette.appendChild(item);
+  });
+
+  const templateRow = document.getElementById('templateRow');
+  Object.entries(pieceTemplates).forEach(([id, tpl]) => {
+    const btn = document.createElement('button');
+    btn.className = 'template-btn';
+    btn.dataset.template = id;
+    btn.title = 'Собрать: ' + tpl.label;
+    btn.innerHTML = `<span class="tpl-icon">${tpl.icon}</span><span>${tpl.label}</span>`;
+    btn.addEventListener('click', () => loadTemplate(pieceTemplates, id));
+    templateRow.appendChild(btn);
+  });
+
+  const characterRow = document.getElementById('characterRow');
+  Object.entries(characterTemplates).forEach(([id, tpl]) => {
+    const btn = document.createElement('button');
+    btn.className = 'character-btn';
+    btn.dataset.character = id;
+    btn.title = 'Собрать персонажа: ' + tpl.label;
+    btn.innerHTML = `<span class="char-icon">${tpl.icon}</span><span>${tpl.label}</span>`;
+    btn.addEventListener('click', () => loadTemplate(characterTemplates, id));
+    characterRow.appendChild(btn);
+  });
+
+  let draggedShape = null;
+
+  const shapeSizes = { circle: 22, square: 22, triangle: 22, glyph: 24 };
+
+  function getShapeInfo(shape) {
+    if (!shape) return null;
+    if (shape.type === 'part') {
+      const p = pieceParts[shape.part];
+      if (!p) return null;
+      return { w: p.w, h: p.h };
+    }
+    if (shape.type === 'glyph') {
+      return { w: 24, h: 24 };
+    }
+    const size = shapeSizes[shape.type] || 22;
+    return { w: size, h: size };
+  }
+
+  const paletteItems = document.querySelectorAll('.part-item, .shape-item, .glyph-item');
+  paletteItems.forEach((item) => {
+    item.addEventListener('dragstart', (e) => {
+      draggedShape = {
+        type: item.dataset.shape,
+        part: item.dataset.part || null,
+        symbol: item.dataset.symbol || null
+      };
+      e.dataTransfer.effectAllowed = 'copy';
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      draggedShape = null;
+    });
+  });
+
+  constructorCanvas.addEventListener('dragover', (e) => {
+    if (!draggedShape) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    constructorCanvas.classList.add('drag-over');
+  });
+  constructorCanvas.addEventListener('dragleave', () => {
+    constructorCanvas.classList.remove('drag-over');
+  });
+  constructorCanvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+    constructorCanvas.classList.remove('drag-over');
+    if (!draggedShape) return;
+    const info = getShapeInfo(draggedShape);
+    if (!info) return;
+
+    const rect = constructorCanvas.getBoundingClientRect();
+    let left = e.clientX - rect.left - info.w / 2;
+    let top  = e.clientY - rect.top  - info.h / 2;
+    left = Math.max(0, Math.min(rect.width  - info.w, left));
+    top  = Math.max(0, Math.min(rect.height - info.h, top));
+    addShapeToCanvas(draggedShape, left, top);
+  });
+
+  function addShapeToCanvas(shape, left, top) {
+    const info = getShapeInfo(shape);
+    if (!info) return;
+
+    const el = document.createElement('div');
+    el.className = 'canvas-shape';
+    el.dataset.shape = shape.type;
+    el.style.left = left + 'px';
+    el.style.top  = top  + 'px';
+    el.style.width  = info.w + 'px';
+    el.style.height = info.h + 'px';
+
+    if (shape.type === 'part') {
+      el.classList.add('canvas-part');
+      el.dataset.part = shape.part;
+      el.innerHTML = pieceParts[shape.part].svg;
+    } else if (shape.type === 'glyph') {
+      el.classList.add('canvas-glyph');
+      el.dataset.symbol = shape.symbol;
+      el.textContent = shape.symbol;
+      el.style.fontSize = '24px';
+    } else {
+      el.classList.add('shape-' + shape.type);
+    }
+
+    makeCanvasShapeDraggable(el);
+    el.addEventListener('dblclick', () => el.remove());
+    constructorCanvas.appendChild(el);
+  }
+
+  function makeCanvasShapeDraggable(el) {
+    el.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const canvasRect = constructorCanvas.getBoundingClientRect();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startLeft = parseFloat(el.style.left);
+      const startTop  = parseFloat(el.style.top);
+      const w = parseFloat(el.style.width);
+      const h = parseFloat(el.style.height);
+
+      function onMove(ev) {
+        let newLeft = startLeft + (ev.clientX - startX);
+        let newTop  = startTop  + (ev.clientY - startY);
+
+        newLeft = Math.round(newLeft / 2) * 2;
+        newTop  = Math.round(newTop  / 2) * 2;
+
+        [newLeft, newTop] = applySnap(el, newLeft, newTop, w, h);
+
+        newLeft = Math.max(0, Math.min(canvasRect.width  - w, newLeft));
+        newTop  = Math.max(0, Math.min(canvasRect.height - h, newTop));
+        el.style.left = newLeft + 'px';
+        el.style.top  = newTop  + 'px';
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+
+  function applySnap(el, left, top, w, h) {
+    const SNAP = 3;
+    const centerX = left + w / 2;
+    const topY = top;
+    const bottomY = top + h;
+
+    const others = Array.from(constructorCanvas.querySelectorAll('.canvas-shape')).filter(s => s !== el);
+
+    let snapX = null, snapY = null, bestX = SNAP + 1, bestY = SNAP + 1;
+
+    for (const other of others) {
+      const ol = parseFloat(other.style.left);
+      const ot = parseFloat(other.style.top);
+      const ow = parseFloat(other.style.width);
+      const oh = parseFloat(other.style.height);
+
+      const otherCenterX = ol + ow / 2;
+      const dx = Math.abs(centerX - otherCenterX);
+      if (dx < bestX) { bestX = dx; snapX = otherCenterX - w / 2; }
+
+      const dBottom = Math.abs(topY - (ot + oh));
+      if (dBottom < bestY) { bestY = dBottom; snapY = ot + oh; }
+
+      const dTop = Math.abs(bottomY - ot);
+      if (dTop < bestY) { bestY = dTop; snapY = ot - h; }
+    }
+
+    if (snapX !== null && bestX <= SNAP) left = snapX;
+    if (snapY !== null && bestY <= SNAP) top  = snapY;
+    return [left, top];
+  }
+
+  function loadTemplate(source, templateId) {
+    constructorCanvas.innerHTML = '';
+    const tpl = source[templateId];
+    if (!tpl) return;
+    tpl.parts.forEach((p) => {
+      const part = pieceParts[p.part];
+      if (!part) return;
+      addShapeToCanvas(
+        { type: 'part', part: p.part },
+        p.x, p.y
+      );
+    });
+  }
+
+  clearCanvasBtn.addEventListener('click', () => {
+    constructorCanvas.innerHTML = '';
+  });
+
+  addToTrayBtn.addEventListener('click', () => {
+    const shapes = constructorCanvas.querySelectorAll('.canvas-shape');
+    if (shapes.length === 0) return;
+
+    const piece = document.createElement('div');
+    piece.className = 'piece';
+    piece.draggable = true;
+    piece.dataset.symbol = 'custom';
+
+    shapes.forEach((shapeEl) => {
+      const clone = shapeEl.cloneNode(true);
+      piece.appendChild(clone);
+    });
+
+    setupDragForPiece(piece);
+    tray.appendChild(piece);
+    constructorCanvas.innerHTML = '';
+  });
+</script>
+
+</body>
+</html>
