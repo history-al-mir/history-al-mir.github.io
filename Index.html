@@ -117,7 +117,7 @@
     100% { box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
   }
 
-  /* маленький значок в углу фигуры, показывающий, что поведение изменено (постоянный, пока не переопределят) */
+  /* маленький значок в углу фигуры, показывающий, что поведение изменено */
   .piece.behavior-marked::after {
     content: '⚔️';
     position: absolute;
@@ -131,8 +131,6 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
   }
 
-  /* всплывающая подсказка "Ходит как: ..." — показывается сразу после назначения,
-     не дожидаясь наведения курсора на саму фигуру */
   .behavior-toast {
     position: fixed;
     z-index: 9999;
@@ -165,7 +163,7 @@
   }
 
   :root {
-    --cell-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTAsIDUzKSIgb3BhY2l0eT0iMC4xMiI+CiAgICA8cGF0aCBkPSJNNTEuOTcyOSAwLjIzNjY5NEM2MS4xNjM4IDEuMTU0MDMgNjkuODgzMiA0LjcwOTgzIDc3LjA1ODIgMTAuNDY2NUM4NC4yMzMyIDE2LjIyMzIgODkuNTUwNyAyMy45Mjk2IDkyLjM1NjUgMzIuNjM3NUM5NS4xNjIyIDQxLjM0NTQgOTUuMzMzOCA1MC42NzUgOTIuODUwMSA1OS40NzgxQzkwLjM2NjQgNjguMjgxMyA4NS4zMzU5IDc2LjE3NCA3OC4zNzczIDgyLjE4NTJDNzEuNDE4OCA4OC4xOTYzIDYyLjgzNTkgOTIuMDYzNiA1My42ODQ4IDkzLjMxMTJDNDQuNTMzNyA5NC41NTg4IDM1LjIxMzYgOTMuMTMyMiAyNi44NzEzIDg5LjIwNzFDMTguNTI5IDg1LjI4MTkgMTEuNTI4NCA3OS4wMjk1IDYuNzMwOTcgNzEuMjE4OUMxLjkzMzU1IDYzLjQwODQgLTAuMjkwNTk1IDU0LjUwOTIgMC4wMzAzNDY1IDQ1LjM3NUwxMi4wNjQxIDQ2LjQwNjJDMTEuODI1OSA1My4xODU0IDEzLjYwOTEgNTkuMTQ1NiAxNy4xNjk2IDY0Ljk0MjRDMjAuNzMwMSA3MC43MzkxIDI1LjkyNTggNzUuMzc5NSAzMi4xMTcyIDc4LjI5MjdDMzguMzA4NiA4MS4yMDU4IDQ1LjIyNTcgODIuMjY0NSA1Mi4wMTc0IDgxLjMzODZDNTguODA5MSA4MC40MTI3IDY1LjE3OTEgNzcuNTQyNSA3MC4zNDM1IDczLjA4MTJDNzUuNTA3OSA2OC42MTk5IDc5LjI0MTUgNjIuNzYyMiA4MS4wODQ4IDU2LjIyODdDODIuOTI4MSA0OS42OTUyIDgyLjgwMDggNDIuNzcxMSA4MC43MTg0IDM2LjMwODNDNzguNjM2IDI5Ljg0NTYgNzQuNjg5NSAyNC4xMjYxIDY5LjM2NDUgMTkuODUzNkM2NC4wMzk0IDE1LjU4MTIgNTguNzk0MSAxMy4wNTU4IDUxLjk3MjkgMTIuMzc1VjAuMjM2Njk0WiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik0wLjM0MTgwOSA0MS4yNUMxLjc3NDMxIDI5LjkxODIgNy4yMDQgMTkuMzAxIDE1Ljg1NTMgMTEuNzQxMUMyNC41MDY2IDQuMTgxMjIgMzUuNjQ5NyAwLjAwNjE4NTk5IDQ3LjE5MjEgMEw0Ny4xOTU4IDYuNjcxMkMzNy4yOTYxIDYuNjc2NTEgMjcuNzM4OCAxMC4yNTc0IDIwLjMxODggMTYuNzQxM0MxMi44OTg4IDIzLjIyNTMgOC4xMjYyOSAzMi4xNjYzIDYuODk3NjYgNDEuODg1NEwwLjM0MTgwOSA0MS4yNVoiIGZpbGw9IndoaXRlIi8+CiAgICA8cGF0aCBkPSJNMTMuNDc0MyA0Mi40NzYxQzE0LjMzMyAzNC4xNjYxIDE4LjI1MDcgMjYuNDYyMyAyNC40Nzc0IDIwLjgzOTRDMzAuNzA0MSAxNS4yMTY1IDM4LjgwMjMgMTIuMDY5NiA0Ny4yMjE3IDEyLjAwMTJWMTkuMzEyNUM0MC42MjI0IDE5LjM2NjIgMzQuMzM1NSAyMS44NTc5IDI5LjQ1NSAyNi4yNjUzQzI0LjU3NDQgMzAuNjcyNiAyMS41NDkzIDM2LjYxMTUgMjAuODc2MiA0My4xMjVMMTMuNDc0MyA0Mi40NzYxWiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik0yNy4wNjYzIDQzLjY3NDFDMjcuNjE4NCAzOC43MjYyIDI5Ljk2MDYgMzQuMTQyOCAzMy42NjA3IDMwLjc2OTZDMzcuMzYwNyAyNy4zOTY0IDQyLjE2OSAyNS40NjExIDQ3LjE5ODMgMjUuMzIwN0w0Ny4yMTc3IDMxLjk2ODhDNDMuODE4MiAzMi4wNjM3IDQwLjczOTIgMzMuNDA0OSAzOC4yMzgyIDM1LjY4NDlDMzUuNzM3MiAzNy45NjUgMzQuMjMwNiA0MC45MDU1IDMzLjg1NzQgNDQuMjVMMjcuMDY2MyA0My42NzQxWiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNjguOTM2NSA0Ni4xNjM1QzY0Ljc0NDggNTQuMzIyOCA1OC4yNzgzIDYxLjA0ODYgNDguNzM5OCA2Ni40MzA0QzQ1LjgzMzIgNjguMDY5OSA0Mi42NDIxIDY5LjU4NTcgMzkuMTQxOCA3MC45Nzg4QzM2LjI0MTMgNzIuMDA3MiAzMy43ODE3IDcxLjMwNDUgMzEuNjk5NyA2OS43MTQ5QzMwLjUxNjEgNjguODExMyAyOC44Nzg1IDY2LjczODggMjcuOTAwNCA2NS40MzcxQzI2LjI0ODEgNjMuMjM4IDI3LjQ1NDYgNjEuOTk2NCAyOC44MDUxIDYwLjM3MjdDMjkuOTcwOCA1OC45NzEgMzEuNTU3NSA1Ny42NDc2IDMyLjYyNjUgNTYuNDgzQzM0LjQ0OTQgNTQuNDk0NiAzNi4yMTg4IDUzLjY1NzggMzguMzY4NCA1NS43NTQ3QzQwLjMwNzIgNTcuNjQ0MyA0Mi41NzEgNjAuOTM4IDQ1LjUzMzIgNTguNzk5NEM1MC4wMTIzIDU1LjU2NDYgNTQuNjk4NyA1MS42MDc5IDU4LjA5MzggNDcuMTcwOUM1OS4zMzQ2IDQ1LjU0NzUgNjAuMzQ3MSA0My42ODkxIDU4LjY3NTMgNDEuNzk1NUw1Ni4yMjg0IDM5LjA0NzFDNTMuNzA4OSAzNi4yMTYzIDU0LjgzNSAzNS4zMDIgNTYuOTYyOCAzMy4xMzkyTDYwLjIzOTggMjkuNTYyNkM2Mi4wMTExIDI3LjM4NTggNjMuNjYzNyAyNy4wMTQ1IDY1LjEzNzQgMjcuNjYyNUM2Ni45Nzg0IDI4LjQ3MTEgNzAuMjY1NSAzMi40ODc4IDcwLjk0NjggMzQuMjUzMUM3Mi40MzMgMzguMTA0NiA3MC43NDA3IDQyLjY1MzMgNjguOTM2NSA0Ni4xNjM1WiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik05NC41NzI1IDg4LjM5MjlDOTMuNTY4MiA4OC4zOTI5IDkyLjY1MjUgODguMTU3MyA5MS44MjU1IDg3LjY4NkM5MS4wMTMyIDg3LjIxNDcgOTAuMzcwNyA4Ni41NzQgODkuODk4MSA4NS43NjRDODkuNDI1NSA4NC45NTQgODkuMTg5MiA4NC4wNDgyIDg5LjE4OTIgODMuMDQ2OEM4OS4xODkyIDgyLjAzMDYgODkuNDI1NSA4MS4xMTc0IDg5Ljg5ODEgODAuMzA3NEM5MC4zNzA3IDc5LjQ5NzQgOTEuMDEzMiA3OC44NTY4IDkxLjgyNTUgNzguMzg1NUM5Mi42NTI1IDc3LjkxNDIgOTMuNTY4MiA3Ny42Nzg2IDk0LjU3MjUgNzcuNjc4NkM5NS42MDYzIDc3LjY3ODYgOTYuNTI5MyA3Ny45MTQyIDk3LjM0MTYgNzguMzg1NUM5OC4xNTM5IDc4Ljg1NjggOTguNzk2MyA3OS40OTc0IDk5LjI2ODkgODAuMzA3NEM5OS43NTYzIDgxLjExNzQgMTAwIDgyLjAzMDYgMTAwIDgzLjA0NjhDMTAwIDg0LjA2MyA5OS43NTYzIDg0Ljk3NjEgOTkuMjY4OSA4NS43ODYxQzk4Ljc5NjMgODYuNTgxNCA5OC4xNDY1IDg3LjIxNDcgOTcuMzE5NSA4Ny42ODZDOTYuNTA3MiA4OC4xNTczIDk1LjU5MTUgODguMzkyOSA5NC41NzI1IDg4LjM5MjlaTTk0LjU5NDYgODcuNTc1NUM5NS40NTEyIDg3LjU3NTUgOTYuMjI2NiA4Ny4zNzY2IDk2LjkyMDcgODYuOTc5Qzk3LjYxNDkgODYuNTY2NiA5OC4xNTM5IDg2LjAyMTcgOTguNTM3OSA4NS4zNDQyQzk4LjkzNjcgODQuNjUyIDk5LjEzNjEgODMuODg2MiA5OS4xMzYxIDgzLjA0NjhDOTkuMTM2MSA4Mi4xOTI2IDk4LjkzNjcgODEuNDI2NyA5OC41Mzc5IDgwLjc0OTNDOTguMTM5MiA4MC4wNTcxIDk3LjU5MjcgNzkuNTEyMSA5Ni44OTg2IDc5LjExNDVDOTYuMjE5MiA3OC43MDIxIDk1LjQ1MTIgNzguNDk2IDk0LjU5NDYgNzguNDk2QzkzLjc1MjggNzguNDk2IDkyLjk4NDggNzguNzAyMSA5Mi4yOTA3IDc5LjExNDVDOTEuNTk2NSA3OS41MTIxIDkxLjA0MjcgODAuMDU3MSA5MC42MjkyIDgwLjc0OTNDOTAuMjMwNCA4MS40MjY3IDkwLjAzMSA4Mi4xOTI2IDkwLjAzMSA4My4wNDY4QzkwLjAzMSA4My44ODYyIDkwLjIzMDQgODQuNjUyIDkwLjYyOTIgODUuMzQ0MkM5MS4wNDI3IDg2LjAyMTcgOTEuNTg5MSA4Ni41NjY2IDkyLjI2ODUgODYuOTc5QzkyLjk2MjYgODcuMzc2NiA5My43MzggODcuNTc1NSA5NC41OTQ2IDg3LjU3NTVaTTkyLjY0NTEgODUuOTQwN1Y4MC4xMzA3SDk0LjUyODJDOTUuMTc4IDgwLjEzMDcgOTUuNjgwMSA4MC4yNzA3IDk2LjAzNDYgODAuNTUwNUM5Ni40MDM4IDgwLjgxNTYgOTYuNTg4NCA4MS4xOTg1IDk2LjU4ODQgODEuNjk5MkM5Ni41ODg0IDgyLjIxNDcgOTYuMzc0MiA4Mi42NDkxIDk1Ljk0NTkgODMuMDAyNkM5NS41MzI0IDgzLjM0MTMgOTQuOTc4NiA4My41MTA3IDk0LjI4NDQgODMuNTEwN0g5Mi42ODk0VjgyLjg5MjJIOTQuMjg0NEM5NC43NDIzIDgyLjg5MjIgOTUuMTExNSA4Mi43ODE2IDk1LjM5MjEgODIuNTYwN0M5NS42NzI3IDgyLjMyNTEgOTUuODEzMSA4Mi4wMzggOTUuODEzMSA4MS42OTkyQzk1LjgxMzEgODEuMzg5OSA5NS42OTQ5IDgxLjE1NDMgOTUuNDU4NiA4MC45OTIyQzk1LjIzNyA4MC44MzAyIDk0LjkyNjkgODAuNzQ5MyA5NC41MjgyIDgwLjc0OTNIOTMuNDIwNVY4NS45NDA3SDkyLjY0NTFaTTk2LjE4OTcgODUuOTQwN0w5NC4zNzMxIDgzLjE3OTNMOTUuMDgyIDgzLjEzNTFMOTcuMTIwMSA4NS45NDA3SDk2LjE4OTdaIiBmaWxsPSJ3aGl0ZSIvPgogIDwvZz4KPC9zdmc+Cg==");
+    --cell-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTAsIDUzKSIgb3BhY2l0eT0iMC4xMiI+CiAgICA8cGF0aCBkPSJNNTEuOTcyOSAwLjIzNjY5NEM2MS4xNjM4IDEuMTU0MDMgNjkuODgzMiA0LjcwOTgzIDc3LjA1ODIgMTAuNDY2NUM4NC4yMzMyIDE2LjIyMzIgODkuNTUwNyAyMy45Mjk2IDkyLjM1NjUgMzIuNjM3NUM5NS4xNjIyIDQxLjM0NTQgOTUuMzMzOCA1MC42NzUgOTIuODUwMSA1OS40NzgxQzkwLjM2NjQgNjguMjgxMyA4NS4zMzU5IDc2LjE3NCA3OC4zNzczIDgyLjE4NTJDNzEuNDE4OCA4OC4xOTYzIDYyLjgzNTkgOTIuMDYzNiA1My42ODQ4IDkzLjMxMTJDNDQuNTMzNyA5NC41NTg4IDM1LjIxMzYgOTMuMTMyMiAyNi44NzEzIDg5LjIwNzFDMTguNTI5IDg1LjI4MTkgMTEuNTI4NCA3OS4wMjk1IDYuNzMwOTcgNzEuMjE4OUMxLjkzMzU1IDYzLjQwODQgLTAuMjkwNTk1IDU0LjUwOTIgMC4wMzAzNDY1IDQ1LjM3NUwxMi4wNjQxIDQ2LjQwNjJDMTEuODI1OSA1My4xODU0IDEzLjYwOTEgNTkuMTQ1NiAxNy4xNjk2IDY0Ljk0MjRDMjAuNzMwMSA3MC43MzkxIDI1LjkyNTggNzUuMzc5NSAzMi4xMTcyIDc4LjI5MjdDMzguMzA4NiA4MS4yMDU4IDQ1LjIyNTcgODIuMjY0NSA1Mi4wMTc0IDgxLjMzODY1OC44MDkxIDgwLjQxMjcgNjUuMTc5MSA3Ny41NDI1IDcwLjM0MzUgNzMuMDgxMkM3NS41MDc5IDY4LjYxOTkgNzkuMjQxNSA2Mi43NjIyIDgxLjA4NDggNTYuMjI4N0M4Mi45MjgxIDQ5LjY5NTIgODIuODAwOCA0Mi43NzExIDgwLjcxODQgMzYuMzA4M0M3OC42MzYgMjkuODQ1NiA3NC42ODk1IDI0LjEyNjEgNjkuMzY0NSAxOS44NTM2QzY0LjAzOTQgMTUuNTgxMiA1OC43OTQxIDEzLjA1NTggNTEuOTcyOSAxMi4zNzVWMC4yMzY2OTRaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTAuMzQxODA5IDQxLjI1QzEuNzc0MzEgMjkuOTE4MiA3LjIwNCAxOS4zMDEgMTUuODU1MyAxMS43NDExQzI0LjUwNjYgNC4xODEyMiAzNS42NDk3IDAuMDA2MTg1OTkgNDcuMTkyMSAwTDQ3LjE5NTggNi42NzEyQzM3LjI5NjEgNi42NzY1MSAyNy43Mzg4IDEwLjI1NzQgMjAuMzE4OCAxNi43NDEzQzEyLjg5ODggMjMuMjI1MyA4LjEyNjI5IDMyLjE2NjMgNi44OTc2NiA0MS44ODU0TDAuMzQxODA5IDQxLjI1WiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik0xMy40NzQzIDQyLjQ3NjFDMTQuMzMzIDM0LjE2NjEgMTguMjUwNyAyNi40NjIzIDI0LjQ3NzQgMjAuODM5NEMzMC43MDQxIDE1LjIxNjUgMzguODAyMyAxMi4wNjk2IDQ3LjIyMTcgMTIuMDAxMlYxOS4zMTI1QzQwLjYyMjQgMTkuMzY2MiAzNC4zMzU1IDIxLjg1NzkgMjkuNDU1IDI2LjI2NTNDMjQuNTc0NCAzMC42NzI2IDIxLjU0OTMgMzYuNjExNSAyMC44NzYyIDQzLjEyNUwxMy40NzQzIDQyLjQ3NjFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTI3LjA2NjMgNDMuNjc0MUMyNy42MTg0IDM4LjcyNjIgMjkuOTYwNiAzNC4xNDI4IDMzLjY2MDcgMzAuNzY5NkMzNy4zNjA3IDI3LjM5NjQgNDIuMTY5IDI1LjQ2MTEgNDcuMTk4MyAyNS4zMjA3TDQ3LjIxNzcgMzEuOTY4OEM0My44MTgyIDMyLjA2MzcgNDAuNzM5MiAzMy40MDQ5IDM4LjIzODIgMzUuNjg0OUMzNS43MzcyIDM3Ljk2NSAzNC4yMzA2IDQwLjkwNTUgMzMuODU3NCA0NC4yNUwyNy4wNjYzIDQzLjY3NDFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik02OC45MzY1IDQ2LjE2MzVDNjQuNzQ0OCA1NC4zMjI4IDU4LjI3ODMgNjEuMDQ4NiA0OC43Mzk4IDY2LjQzMDRDNDUuODMzMiA2OC4wNjk5IDQyLjY0MjEgNjkuNTg1NyAzOS4xNDE4IDcwLjk3ODhDMzYuMjQxMyA3Mi4wMDcyIDMzLjc4MTcgNzEuMzA0NSAzMS42OTk3IDY5LjcxNDlDMzAuNTE2MSA2OC44MTEzIDI4Ljg3ODUgNjYuNzM4OCAyNy45MDA0IDY1LjQzNzFDMjYuMjQ4MSA2My4yMzggMjcuNDU0NiA2MS45OTY0IDI4LjgwNTEgNjAuMzcyN0MyOS45NzA4IDU4Ljk3MSAzMS41NTc1IDU3LjY0NzYgMzIuNjI2NSA1Ni40ODNDMzQuNDQ5NCA1NC40OTQ2IDM2LjIxODggNTMuNjU3OCAzOC4zNjg0IDU1Ljc1NDdDNDAuMzA3MiA1Ny42NDQzIDQyLjU3MSA2MC45MzggNDUuNTMzMiA1OC43OTk0QzUwLjAxMjMgNTUuNTY0NiA1NC42OTg3IDUxLjYwNzkgNTguMDkzOCA0Ny4xNzA5QzU5LjMzNDYgNDUuNTQ3NSA2MC4zNDcxIDQzLjY4OTEgNTguNjc1MyA0MS43OTU1TDU2LjIyODQgMzkuMDQ3MUM1My43MDg5IDM2LjIxNjMgNTQuODM1IDM1LjMwMiA1Ni45NjI4IDMzLjEzOTJMNjAuMjM5OCAyOS41NjI2QzYyLjAxMTEgMjcuMzg1OCA2My42NjM3IDI3LjAxNDUgNjUuMTM3NCAyNy42NjI1QzY2Ljk3ODQgMjguNDcxMSA3MC4yNjU1IDMyLjQ4NzggNzAuOTQ2OCAzNC4yNTMxQzcyLjQzMyAzOC4xMDQ2IDcwLjc0MDcgNDIuNjUzMyA2OC45MzY1IDQ2LjE2MzVaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTk0LjU3MjUgODguMzkyOUM5My41NjgyIDg4LjM5MjkgOTIuNjUyNSA4OC4xNTczIDkxLjgyNTUgODcuNjg2QzkxLjAxMzIgODcuMjE0NyA5MC4zNzA3IDg2LjU3NCA4OS44OTgxIDg1Ljc2NEM4OS40MjU1IDg0Ljk1NCA4OS4xODkyIDg0LjA0ODIgODkuMTg5MiA4My4wNDY4Qzg5LjE4OTIgODIuMDMwNiA4OS40MjU1IDgxLjExNzQgODkuODk4MSA4MC4zMDc0QzkwLjM3MDcgNzkuNDk3NCA5MS4wMTMyIDc4Ljg1NjggOTEuODI1NSA3OC4zODU1QzkyLjY1MjUgNzcuOTE0MiA5My41NjgyIDc3LjY3ODYgOTQuNTcyNSA3Ny42Nzg2Qzk1LjYwNjMgNzcuNjc4NiA5Ni41MjkzIDc3LjkxNDIgOTcuMzQxNiA3OC4zODU1Qzk4LjE1MzkgNzguODU2OCA5OC43OTYzIDc5LjQ5NzQgOTkuMjY4OSA4MC4zMDc0Qzk5Ljc1NjMgODEuMTE3NCAxMDAgODIuMDMwNiAxMDAgODMuMDQ2OEMxMDAgODQuMDYzIDk5Ljc1NjMgODQuOTc2MSA5OS4yNjg5IDg1Ljc4NjFDOTguNzk2MyA4Ni41ODE0IDk4LjE0NjUgODcuMjE0NyA5Ny4zMTk1IDg3LjY4NkM5Ni41MDcyIDg4LjE1NzMgOTUuNTkxNSA4OC4zOTI5IDk0LjU3MjUgODguMzkyOVpNOTQuNTk0NiA4Ny41NzU1Qzk1LjQ1MTIgODcuNTc1NSA5Ni4yMjY2IDg3LjM3NjYgOTYuOTIwNyA4Ni45NzlDOTcuNjE0OSA4Ni41NjY2IDk4LjE1MzkgODYuMDIxNyA5OC41Mzc5IDg1LjM0NDJDOTguOTM2NyA4NC42NTIgOTkuMTM2MSA4My44ODYyIDk5LjEzNjEgODMuMDQ2OEM5OS4xMzYxIDgyLjE5MjYgOTguOTM2NyA4MS40MjY3IDk4LjUzNzkgODAuNzQ5M0M5OC4xMzkyIDgwLjA1NzEgOTcuNTkyNyA3OS41MTIxIDk2Ljg5ODYgNzkuMTE0NUM5Ni4yMTkyIDc4LjcwMjEgOTUuNDUxMiA3OC40OTYgOTQuNTk0NiA3OC40OTZDOTMuNzUyOCA3OC40OTYgOTIuOTg0OCA3OC43MDIxIDkyLjI5MDcgNzkuMTE0NUM5MS41OTY1IDc5LjUxMjEgOTEuMDQyNyA4MC4wNTcxIDkwLjYyOTIgODAuNzQ5M0M5MC4yMzA0IDgxLjQyNjcgOTAuMDMxIDgyLjE5MjYgOTAuMDMxIDgzLjA0NjhDOTAuMDMxIDgzLjg4NjIgOTAuMjMwNCA4NC42NTIgOTAuNjI5MiA4NS4zNDQyQzkxLjA0MjcgODYuMDIxNyA5MS41ODkxIDg2LjU2NjYgOTIuMjY4NSA4Ni45NzlDOTIuOTYyNiA4Ny4zNzY2IDkzLjczOCA4Ny41NzU1IDk0LjU5NDYgODcuNTc1NVpNOTIuNjQ1MSA4NS45NDA3VjgwLjEzMDdIOTQuNTI4MkM5NS4xNzggODAuMTMwNyA5NS42ODAxIDgwLjI3MDcgOTYuMDM0NiA4MC41NTA1Qzk2LjQwMzggODAuODE1NiA5Ni41ODg0IDgxLjE5ODUgOTYuNTg4NCA4MS42OTkyQzk2LjU4ODQgODIuMjE0NyA5Ni4zNzQyIDgyLjY0OTEgOTUuOTQ1OSA4My4wMDI2Qzk1LjUzMjQgODMuMzQxMyA5NC45Nzg2IDgzLjUxMDcgOTQuMjg0NCA4My41MTA3SDkyLjY4OTRWODIuODkyMkg5NC4yODQ0Qzk0Ljc0MjMgODIuODkyMiA5NS4xMTE1IDgyLjc4MTYgOTUuMzkyMSA4Mi41NjA3Qzk1LjY3MjcgODIuMzI1MSA5NS44MTMxIDgyLjAzOCA5NS44MTMxIDgxLjY5OTJDOTUuODEzMSA4MS4zODk5IDk1LjY5NDkgODEuMTU0MyA5NS40NTg2IDgwLjk5MjJDOTUuMjM3IDgwLjgzMDIgOTQuOTI2OSA4MC43NDkzIDk0LjUyODIgODAuNzQ5M0g5My40MjA1Vjg1Ljk0MDdIOTIuNjQ1MVpNOTYuMTg5NyA4NS45NDA3TDk0LjM3MzEgODMuMTc5M0w5NS4wODIgODMuMTM1MUw5Ny4xMjAxIDg1Ljk0MDdIOTYuMTg5N1oiIGZpbGw9IndoaXRlIi8+CiAgPC9nPgo8L3N2Zz4K");
   }
 
   .cell {
@@ -176,7 +174,6 @@
     align-items: center;
     box-sizing: border-box;
     position: relative;
-    /* фон в два слоя одного паттерна со смещением + диагональный градиент под низом */
     background-color: #222;
     background-image: var(--cell-pattern), var(--cell-pattern), linear-gradient(135deg, #2b2b2b 39%, #101010 90%);
     background-repeat: repeat, repeat, no-repeat;
@@ -213,6 +210,11 @@
     outline: 3px solid #e53935;
     outline-offset: -3px;
   }
+  /* чёрная клетка подсвечивается зелёным, когда её может принять гоблин */
+  .cell.black-cell.drag-over {
+    outline: 3px solid #66bb6a;
+    outline-offset: -3px;
+  }
 
   .tray {
     display: flex;
@@ -240,6 +242,12 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     position: relative;
     overflow: hidden;
+  }
+
+  /* гоблин визуально выделен в лотке */
+  .piece[data-symbol="👺"] {
+    background: #e8f5e9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 0 0 2px #66bb6a;
   }
 
   .piece.dragging { opacity: 0.4; }
@@ -276,7 +284,6 @@
     letter-spacing: 0.5px;
   }
 
-  /* быстрая сборка — кнопки-шаблоны */
   .template-row {
     display: flex;
     gap: 6px;
@@ -310,7 +317,6 @@
     line-height: 1;
   }
 
-  /* кнопки-персонажи */
   .character-btn {
     display: flex;
     flex-direction: column;
@@ -338,7 +344,6 @@
     line-height: 1;
   }
 
-  /* палитра частей фигур */
   .part-palette {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -371,7 +376,6 @@
     pointer-events: none;
   }
 
-  /* простые формы */
   .shape-palette {
     display: flex;
     gap: 14px;
@@ -399,7 +403,6 @@
     border-bottom: 22px solid #ff9800;
   }
 
-  /* глифы-символы */
   .shape-palette-row {
     display: flex;
     gap: 6px;
@@ -430,7 +433,6 @@
   }
   .glyph-item.dragging { opacity: 0.4; }
 
-  /* холст конструктора */
   .constructor-canvas {
     position: relative;
     width: 60px;
@@ -568,7 +570,6 @@
     color: #555;
   }
 
-  /* кнопка "Способности фигуры" — широкая, прямоугольная, отличается от круглых свотчей */
   .ability-btn {
     width: 100%;
     border-radius: 6px !important;
@@ -590,7 +591,6 @@
     cursor: not-allowed;
   }
 
-  /* маркеры доступных ходов/срубаний поверх клеток доски */
   .move-marker,
   .capture-marker {
     position: absolute;
@@ -670,6 +670,9 @@
 
     <div class="behavior-group-label">Чёрные</div>
     <div class="behavior-grid" id="behaviorGridBlack"></div>
+
+    <div class="behavior-group-label">Особые</div>
+    <div class="behavior-grid" id="behaviorGridSpecial"></div>
   </div>
 
   <div class="main-column">
@@ -690,7 +693,6 @@
   <div class="piece" draggable="true" data-symbol="♞">♞</div>
   <div class="piece" draggable="true" data-symbol="♟">♟</div>
   <div class="piece" draggable="true" data-symbol="👺">👺</div>
-  <div class="piece" draggable="true" data-symbol="👹">👹</div>
 </div>
 
 <div class="constructor">
@@ -734,7 +736,8 @@
 
 <div class="hint">
   Перетащите фигуру мышью на бордовую клетку (можно вернуть обратно в лоток).
-  Долгое нажатие на клетку открывает меню внешнего вида.
+  Гоблина 👺 можно ставить и на чёрные клетки — они закрыты для всех остальных фигур.
+  Долгое нажатие на клетку открывает меню внешнего вида и способностей.
   В конструкторе соберите свою фигуру: используйте готовые кнопки быстрой сборки,
   персонажей (Ирина, Ирис, Костя, Стив), части шахматных фигур или простые формы.
   Слева — лотки присвоения поведения: окуните туда любую фигуру, чтобы она стала
@@ -757,13 +760,9 @@
   const LATTICE_SIZE = 4;
   const latticeGrid = Array.from({ length: LATTICE_SIZE }, () => Array(LATTICE_SIZE).fill(null));
 
-  // 5x5 сетка чёрных клеток — обычно заблокированы для фигур, но доступны Гоблину
-  const BLACK_LATTICE_SIZE = 5;
-  const blackLatticeGrid = Array.from({ length: BLACK_LATTICE_SIZE }, () => Array(BLACK_LATTICE_SIZE).fill(null));
-
-  // полная сетка всех существующих клеток по реальным координатам доски —
-  // нужна Гоблину, который скользит по диагонали через оба типа клеток
-  const realCellGrid = Array.from({ length: rows }, () => Array(cols).fill(null));
+  // полная сетка всех отрисованных клеток (и бордовых, и чёрных) в координатах 9x9.
+  // нужна гоблину, который умеет ходить и по чёрным клеткам.
+  const gridCells = Array.from({ length: rows }, () => Array(cols).fill(null));
 
   for (let row = 0; row < rows; row++) {
     const isEvenLine = (row + 1) % 2 === 0;
@@ -771,9 +770,9 @@
       if ((row + col) % 2 === 0) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
-        cell.dataset.realRow = row;
-        cell.dataset.realCol = col;
-        realCellGrid[row][col] = cell;
+        cell.dataset.gridRow = row;
+        cell.dataset.gridCol = col;
+
         if (isEvenLine) {
           cell.classList.add('maroon');
           const latticeRow = (row - 1) / 2;
@@ -784,13 +783,11 @@
           cell.dataset.latticeCol = latticeCol;
           latticeGrid[latticeRow][latticeCol] = cell;
         } else {
+          // "чёрная" клетка — обычные фигуры сюда ставить нельзя, только гоблина
           cell.classList.add('black-cell');
-          const blackLatticeRow = row / 2;
-          const blackLatticeCol = col / 2;
-          cell.dataset.blackLatticeRow = blackLatticeRow;
-          cell.dataset.blackLatticeCol = blackLatticeCol;
-          blackLatticeGrid[blackLatticeRow][blackLatticeCol] = cell;
         }
+
+        gridCells[row][col] = cell;
         cell.style.gridRowStart = row + 1;
         cell.style.gridColumnStart = col + 1;
         board.appendChild(cell);
@@ -809,10 +806,6 @@
   function setupDragForPiece(piece) {
     piece.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('text/plain', piece.dataset.symbol || 'piece');
-      // 'copyMove' — фигуру можно и переместить на доску (move), и "окунуть"
-      // в лоток поведения без перемещения (copy). Если оставить только 'move',
-      // браузер по спецификации DnD отменяет операцию, когда лоток выставляет
-      // dropEffect='copy', и событие 'drop' на лотке вообще не срабатывает.
       e.dataTransfer.effectAllowed = 'copyMove';
       draggedPiece = piece;
       draggedSourceCell = piece.closest('.cell') || null;
@@ -854,7 +847,7 @@
      СПОСОБНОСТИ ФИГУР: ходы и срубание
      ============================================================ */
 
-  // сопоставление юникод-символов фигур с их типом и цветом (белые/чёрные)
+  // сопоставление юникод-символов фигур с их типом и цветом
   const PIECE_TYPE_BY_SYMBOL = {
     '♔': { color: 'white', type: 'king' },
     '♕': { color: 'white', type: 'queen' },
@@ -867,7 +860,8 @@
     '♜': { color: 'black', type: 'rook' },
     '♝': { color: 'black', type: 'bishop' },
     '♞': { color: 'black', type: 'knight' },
-    '♟': { color: 'black', type: 'pawn' }
+    '♟': { color: 'black', type: 'pawn' },
+    '👺': { color: 'goblin', type: 'goblin' }
   };
 
   function getPieceInfo(pieceEl) {
@@ -879,100 +873,21 @@
     return PIECE_TYPE_BY_SYMBOL[pieceEl.dataset.symbol] || null;
   }
 
-  /* ============================================================
-     ЛОТКИ ПРИСВОЕНИЯ ПОВЕДЕНИЯ (слева)
-     ============================================================ */
-
-  const PIECE_LABELS = {
-    king: 'Король', queen: 'Ферзь', rook: 'Ладья',
-    bishop: 'Слон', knight: 'Конь', pawn: 'Пешка'
-  };
-  const COLOR_LABELS = { white: 'белый', black: 'чёрный' };
-
-  const behaviorGridWhite = document.getElementById('behaviorGridWhite');
-  const behaviorGridBlack = document.getElementById('behaviorGridBlack');
-
-  // "окунаем" фигуру: присваиваем ей поведение, но НЕ трогаем её положение —
-  // она остаётся там, где стояла (на доске или в основном лотке). Даёт три
-  // формы обратной связи: свечение прямо на фигуре, всплывающая подсказка
-  // рядом с курсором и постоянный тултип + значок на самой фигуре.
-  function assignBehaviorToPiece(piece, type, color) {
-    piece.dataset.behaviorType = type;
-    piece.dataset.behaviorColor = color;
-    piece.title = 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')';
-
-    // постоянный значок ⚔️, показывающий, что фигуре назначено поведение
-    piece.classList.add('behavior-marked');
-
-    // временное свечение — сразу видно, что что-то изменилось
-    piece.classList.remove('behavior-glow');
-    void piece.offsetWidth; // перезапуск CSS-анимации
-    piece.classList.add('behavior-glow');
-    piece.addEventListener('animationend', function onGlowEnd(ev) {
-      if (ev.animationName === 'pieceBehaviorGlow') {
-        piece.classList.remove('behavior-glow');
-        piece.removeEventListener('animationend', onGlowEnd);
-      }
-    });
-
-    showBehaviorToast(piece, 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')');
+  function topPieceAt(cell) {
+    if (!cell || !cell._stack || cell._stack.length === 0) return null;
+    return cell._stack[cell._stack.length - 1];
   }
 
-  // короткая всплывающая подсказка над фигурой — не требует наведения курсора,
-  // чтобы игрок сразу видел подтверждение назначения
-  function showBehaviorToast(piece, text) {
-    const rect = piece.getBoundingClientRect();
-    const toast = document.createElement('div');
-    toast.className = 'behavior-toast';
-    toast.textContent = text;
-    const left = Math.min(Math.max(rect.left + rect.width / 2, 70), window.innerWidth - 70);
-    const top = Math.max(rect.top, 30);
-    toast.style.left = left + 'px';
-    toast.style.top = top + 'px';
-    document.body.appendChild(toast);
-    toast.addEventListener('animationend', () => toast.remove());
-    // подстраховка на случай, если animationend не сработает
-    setTimeout(() => toast.remove(), 2200);
+  function occupantColorAtCell(cell) {
+    const top = topPieceAt(cell);
+    if (!top) return null;
+    const info = getPieceInfo(top);
+    // фигуры с неизвестным типом (кастомные из конструктора) всё равно занимают клетку
+    return info ? info.color : 'unknown';
   }
-
-  Object.entries(PIECE_TYPE_BY_SYMBOL).forEach(([symbol, info]) => {
-    const slot = document.createElement('div');
-    slot.className = 'behavior-slot';
-    slot.textContent = symbol;
-    slot.dataset.behaviorType = info.type;
-    slot.dataset.behaviorColor = info.color;
-    slot.title = PIECE_LABELS[info.type] + ' (' + COLOR_LABELS[info.color] + ') — окуните сюда фигуру';
-
-    slot.addEventListener('dragover', (e) => {
-      if (!draggedPiece) return;
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy';
-      slot.classList.add('drag-over');
-    });
-    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
-    slot.addEventListener('drop', (e) => {
-      e.preventDefault();
-      slot.classList.remove('drag-over');
-      if (!draggedPiece) return;
-
-      assignBehaviorToPiece(draggedPiece, info.type, info.color);
-
-      slot.classList.remove('assigned-flash');
-      void slot.offsetWidth; // перезапуск CSS-анимации
-      slot.classList.add('assigned-flash');
-    });
-
-    (info.color === 'white' ? behaviorGridWhite : behaviorGridBlack).appendChild(slot);
-  });
 
   function occupantColorAt(r, c) {
-    const cell = latticeGrid[r] && latticeGrid[r][c];
-    if (!cell || !cell._stack || cell._stack.length === 0) return null;
-    const top = cell._stack[cell._stack.length - 1];
-    const info = getPieceInfo(top);
-    // фигуры с неизвестным типом (например, кастомные из конструктора) всё равно считаются
-    // "занимающими" клетку — их нельзя захватить по клику способностей, но они блокируют путь
-    return info ? info.color : 'unknown';
+    return occupantColorAtCell(latticeGrid[r] && latticeGrid[r][c]);
   }
 
   function inLatticeBounds(r, c) {
@@ -1024,7 +939,6 @@
     else if (type === 'king') addStep(KING_DIRS);
     else if (type === 'knight') addStep(KNIGHT_DIRS);
     else if (type === 'pawn') {
-      // белые идут к строке 0, чёрные — к строке 3; наша мини-доска — 4x4
       const dir = color === 'white' ? -1 : 1;
       const r1 = fromRow + dir;
       if (inLatticeBounds(r1, fromCol) && !occupantColorAt(r1, fromCol)) {
@@ -1038,6 +952,47 @@
       });
     }
 
+    return results;
+  }
+
+  /* --- Гоблин: ходит наискосок по общей сетке 9x9 (бордовые + чёрные клетки),
+         а рубит только «соседние» клетки своего же цвета. --- */
+  const GOBLIN_DIAG_DIRS = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+  const GOBLIN_STRIKE_DIRS = [[2, 0], [-2, 0], [0, 2], [0, -2]];
+
+  // скольжение по диагонали: шаг (±1, ±1) сохраняет чётность row+col,
+  // поэтому путь сам чередует бордовые и чёрные клетки
+  function computeGoblinMoves(gridRow, gridCol) {
+    const results = [];
+    GOBLIN_DIAG_DIRS.forEach(([dr, dc]) => {
+      let r = gridRow + dr;
+      let c = gridCol + dc;
+      while (r >= 0 && r < rows && c >= 0 && c < cols) {
+        const cell = gridCells[r][c];
+        if (!cell) break;
+        // гоблин не рубит наскоком — он просто упирается в фигуру
+        if (occupantColorAtCell(cell)) break;
+        results.push({ gridRow: r, gridCol: c });
+        r += dr;
+        c += dc;
+      }
+    });
+    return results;
+  }
+
+  // удар по соседней клетке: на бордовой клетке — соседние бордовые,
+  // на чёрной — соседние по вертикали/горизонтали чёрные (те же смещения ±2 по одной оси)
+  function computeGoblinStrikes(gridRow, gridCol, color) {
+    const results = [];
+    GOBLIN_STRIKE_DIRS.forEach(([dr, dc]) => {
+      const r = gridRow + dr;
+      const c = gridCol + dc;
+      if (r < 0 || r >= rows || c < 0 || c >= cols) return;
+      const cell = gridCells[r][c];
+      if (!cell) return;
+      const occ = occupantColorAtCell(cell);
+      if (occ && occ !== color) results.push({ gridRow: r, gridCol: c });
+    });
     return results;
   }
 
@@ -1068,33 +1023,53 @@
   function activateAbilityMode(cell) {
     clearAbilityMode();
 
-    const stack = cell._stack || [];
-    if (stack.length === 0) return;
-    const topPiece = stack[stack.length - 1];
+    const topPiece = topPieceAt(cell);
+    if (!topPiece) return;
     const info = getPieceInfo(topPiece);
     if (!info) return;
 
-    const fromRow = parseInt(cell.dataset.latticeRow, 10);
-    const fromCol = parseInt(cell.dataset.latticeCol, 10);
-    const reachable = computeReachableMoves(fromRow, fromCol, info.type, info.color);
-    if (reachable.length === 0) return;
+    const entries = [];
+
+    if (info.type === 'goblin') {
+      const gr = parseInt(cell.dataset.gridRow, 10);
+      const gc = parseInt(cell.dataset.gridCol, 10);
+      if (Number.isNaN(gr) || Number.isNaN(gc)) return;
+
+      computeGoblinMoves(gr, gc).forEach((m) => {
+        entries.push({ cell: gridCells[m.gridRow][m.gridCol], capture: false, strike: false });
+      });
+      computeGoblinStrikes(gr, gc, info.color).forEach((s) => {
+        entries.push({ cell: gridCells[s.gridRow][s.gridCol], capture: true, strike: true });
+      });
+    } else {
+      // обычные фигуры живут только на бордовых клетках
+      if (cell.dataset.latticeRow === undefined) return;
+      const fromRow = parseInt(cell.dataset.latticeRow, 10);
+      const fromCol = parseInt(cell.dataset.latticeCol, 10);
+      computeReachableMoves(fromRow, fromCol, info.type, info.color).forEach((m) => {
+        entries.push({ cell: latticeGrid[m.row][m.col], capture: m.capture, strike: false });
+      });
+    }
+
+    if (entries.length === 0) return;
 
     abilityMode = { sourceCell: cell, piece: topPiece };
 
-    reachable.forEach(({ row, col, capture }) => {
-      const targetCell = latticeGrid[row][col];
+    entries.forEach(({ cell: targetCell, capture, strike }) => {
       if (!targetCell) return;
 
       const marker = document.createElement('div');
       marker.className = capture ? 'capture-marker' : 'move-marker';
       marker.innerHTML = capture ? CAPTURE_MARKER_SVG : MOVE_MARKER_SVG;
+      if (strike) marker.title = 'Удар по соседней клетке (гоблин остаётся на месте)';
+
       marker.addEventListener('mousedown', (e) => {
         e.stopPropagation();
         e.preventDefault();
       });
       marker.addEventListener('click', (e) => {
         e.stopPropagation();
-        performAbilityMove(targetCell, capture);
+        performAbilityMove(targetCell, capture, strike);
       });
       targetCell.appendChild(marker);
     });
@@ -1110,15 +1085,28 @@
     }, 0);
   }
 
-  function performAbilityMove(targetCell, isCapture) {
+  function performAbilityMove(targetCell, isCapture, isStrike) {
     if (!abilityMode) return;
     const { sourceCell, piece } = abilityMode;
+
+    // Гоблин «рубит» соседнюю клетку, не сходя с места
+    if (isStrike) {
+      const targetStack = targetCell._stack || [];
+      const captured = targetStack[targetStack.length - 1];
+      if (captured) {
+        const idx = targetStack.indexOf(captured);
+        if (idx !== -1) targetStack.splice(idx, 1);
+        captured.remove();
+        updateCellVisuals(targetCell);
+      }
+      clearAbilityMode();
+      return;
+    }
 
     // убираем фигуру с исходной клетки, не трогая то, что было под ней в стеке
     removePieceFromCell(sourceCell, piece);
 
     if (isCapture) {
-      // срубленная фигура удаляется с доски полностью (не в лоток)
       const targetStack = targetCell._stack || [];
       const captured = targetStack[targetStack.length - 1];
       if (captured) {
@@ -1136,24 +1124,38 @@
     clearAbilityMode();
   }
 
+  /* ============================================================
+     ПРАВИЛА ДОПУСКА ФИГУР НА КЛЕТКИ
+     ============================================================ */
+  function pieceIsGoblin(piece) {
+    const info = getPieceInfo(piece);
+    return !!info && info.type === 'goblin';
+  }
+
+  function cellAcceptsPiece(cell, piece) {
+    if (cell.classList.contains('maroon')) return true;
+    if (cell.classList.contains('black-cell')) return pieceIsGoblin(piece);
+    return false;
+  }
+
   function setupDropZone(cell) {
     cell._stack = [];
     cell.addEventListener('dragover', (e) => {
-      if (cell.classList.contains('maroon')) {
+      if (!draggedPiece) return;
+      if (cellAcceptsPiece(cell, draggedPiece)) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-        cell.classList.add('drag-over');
       } else {
         e.dataTransfer.dropEffect = 'none';
-        cell.classList.add('drag-over');
       }
+      cell.classList.add('drag-over');
     });
     cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
     cell.addEventListener('drop', (e) => {
       e.preventDefault();
       cell.classList.remove('drag-over');
-      if (!cell.classList.contains('maroon')) return;
       if (!draggedPiece) return;
+      if (!cellAcceptsPiece(cell, draggedPiece)) return;
       if (draggedSourceCell === cell) return;
       if (draggedSourceCell) removePieceFromCell(draggedSourceCell, draggedPiece);
       cell.appendChild(draggedPiece);
@@ -1174,6 +1176,90 @@
     if (draggedSourceCell) removePieceFromCell(draggedSourceCell, draggedPiece);
     draggedPiece.style.display = 'flex';
     tray.appendChild(draggedPiece);
+  });
+
+  /* ============================================================
+     ЛОТКИ ПРИСВОЕНИЯ ПОВЕДЕНИЯ (слева)
+     ============================================================ */
+
+  const PIECE_LABELS = {
+    king: 'Король', queen: 'Ферзь', rook: 'Ладья',
+    bishop: 'Слон', knight: 'Конь', pawn: 'Пешка',
+    goblin: 'Гоблин'
+  };
+  const COLOR_LABELS = { white: 'белый', black: 'чёрный', goblin: 'нейтральный' };
+
+  const behaviorGridWhite = document.getElementById('behaviorGridWhite');
+  const behaviorGridBlack = document.getElementById('behaviorGridBlack');
+  const behaviorGridSpecial = document.getElementById('behaviorGridSpecial');
+
+  // "окунаем" фигуру: присваиваем ей поведение, но НЕ трогаем её положение
+  function assignBehaviorToPiece(piece, type, color) {
+    piece.dataset.behaviorType = type;
+    piece.dataset.behaviorColor = color;
+    piece.title = 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')';
+
+    piece.classList.add('behavior-marked');
+
+    piece.classList.remove('behavior-glow');
+    void piece.offsetWidth; // перезапуск CSS-анимации
+    piece.classList.add('behavior-glow');
+    piece.addEventListener('animationend', function onGlowEnd(ev) {
+      if (ev.animationName === 'pieceBehaviorGlow') {
+        piece.classList.remove('behavior-glow');
+        piece.removeEventListener('animationend', onGlowEnd);
+      }
+    });
+
+    showBehaviorToast(piece, 'Ходит как: ' + PIECE_LABELS[type] + ' (' + COLOR_LABELS[color] + ')');
+  }
+
+  function showBehaviorToast(piece, text) {
+    const rect = piece.getBoundingClientRect();
+    const toast = document.createElement('div');
+    toast.className = 'behavior-toast';
+    toast.textContent = text;
+    const left = Math.min(Math.max(rect.left + rect.width / 2, 70), window.innerWidth - 70);
+    const top = Math.max(rect.top, 30);
+    toast.style.left = left + 'px';
+    toast.style.top = top + 'px';
+    document.body.appendChild(toast);
+    toast.addEventListener('animationend', () => toast.remove());
+    setTimeout(() => toast.remove(), 2200);
+  }
+
+  Object.entries(PIECE_TYPE_BY_SYMBOL).forEach(([symbol, info]) => {
+    const slot = document.createElement('div');
+    slot.className = 'behavior-slot';
+    slot.textContent = symbol;
+    slot.dataset.behaviorType = info.type;
+    slot.dataset.behaviorColor = info.color;
+    slot.title = PIECE_LABELS[info.type] + ' (' + COLOR_LABELS[info.color] + ') — окуните сюда фигуру';
+
+    slot.addEventListener('dragover', (e) => {
+      if (!draggedPiece) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      slot.classList.add('drag-over');
+    });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if (!draggedPiece) return;
+
+      assignBehaviorToPiece(draggedPiece, info.type, info.color);
+
+      slot.classList.remove('assigned-flash');
+      void slot.offsetWidth;
+      slot.classList.add('assigned-flash');
+    });
+
+    const targetGrid =
+      info.color === 'white' ? behaviorGridWhite :
+      info.color === 'black' ? behaviorGridBlack :
+      behaviorGridSpecial;
+    targetGrid.appendChild(slot);
   });
 
   /* ============================================================
@@ -1203,15 +1289,12 @@
 
   function setCellColor(cell, presetName) {
     if (presetName && colorPresets[presetName]) {
-      // задаём пресет одним слоем, явно перекрывая background-size/position/repeat,
-      // которые у клетки по умолчанию рассчитаны на три слоя (паттерн x2 + градиент)
       cell.style.backgroundImage = colorPresets[presetName];
       cell.style.backgroundColor = '';
       cell.style.backgroundRepeat = 'no-repeat';
       cell.style.backgroundSize = 'cover';
       cell.style.backgroundPosition = 'center';
     } else {
-      // сброс — возвращаемся к обычному фону клетки (паттерн + градиент из CSS-класса)
       cell.style.backgroundImage = '';
       cell.style.backgroundColor = '';
       cell.style.backgroundRepeat = '';
@@ -1289,8 +1372,7 @@
     menu.appendChild(effectTitle);
     menu.appendChild(effectRow);
 
-    // строка "Способности фигуры" — только если на клетке реально стоит фигура
-    const topPiece = cell._stack && cell._stack.length > 0 ? cell._stack[cell._stack.length - 1] : null;
+    const topPiece = topPieceAt(cell);
     const pieceInfo = topPiece ? getPieceInfo(topPiece) : null;
     if (topPiece) {
       const abilityTitle = document.createElement('div');
@@ -1304,7 +1386,6 @@
       abilityBtn.className = 'ability-btn';
       abilityBtn.textContent = '⚔️ Способности фигуры';
       if (!pieceInfo) {
-        // тип неизвестен (например, кастомная фигура из конструктора) — правила ходов не заданы
         abilityBtn.disabled = true;
         abilityBtn.title = 'Для этой фигуры пока не заданы правила ходов';
       } else {
@@ -1341,7 +1422,6 @@
      КОНСТРУКТОР ФИГУР
      ============================================================ */
 
-  /* --- 1. Части шахматных фигур (SVG) --- */
   const pieceParts = {
     base: {
       label: 'Основание',
@@ -1448,8 +1528,6 @@
         <path d="M5 0 L8 7 L7 12 L3 12 L2 7 Z" fill="url(#pieceGrad)"/>
       </svg>`
     },
-
-    /* --- новые детали для персонажей --- */
     head: {
       label: 'Голова',
       w: 12, h: 14,
@@ -1514,7 +1592,6 @@
     }
   };
 
-  /* --- 2. Шаблоны быстрой сборки (шахматные фигуры) --- */
   const pieceTemplates = {
     pawn: {
       label: 'Пешка', icon: '♙',
@@ -1574,7 +1651,6 @@
     }
   };
 
-  /* --- 2b. Персонажи --- */
   const characterTemplates = {
     irina: {
       label: 'Ирина',
@@ -1631,7 +1707,6 @@
   const addToTrayBtn = document.getElementById('addToTrayBtn');
   const clearCanvasBtn = document.getElementById('clearCanvasBtn');
 
-  /* --- 3. Генерируем палитру частей --- */
   const partPalette = document.getElementById('partPalette');
   Object.entries(pieceParts).forEach(([id, part]) => {
     const item = document.createElement('div');
@@ -1644,7 +1719,6 @@
     partPalette.appendChild(item);
   });
 
-  /* --- 4. Генерируем палитру глифов --- */
   const glyphPalette = document.getElementById('glyphPalette');
   ['♔','♕','♖','♗','♘','♙','♚','♛','♜','♝','♞','♟'].forEach((sym) => {
     const item = document.createElement('div');
@@ -1657,7 +1731,6 @@
     glyphPalette.appendChild(item);
   });
 
-  /* --- 5. Кнопки быстрой сборки (шахматы) --- */
   const templateRow = document.getElementById('templateRow');
   Object.entries(pieceTemplates).forEach(([id, tpl]) => {
     const btn = document.createElement('button');
@@ -1669,7 +1742,6 @@
     templateRow.appendChild(btn);
   });
 
-  /* --- 5b. Кнопки персонажей --- */
   const characterRow = document.getElementById('characterRow');
   Object.entries(characterTemplates).forEach(([id, tpl]) => {
     const btn = document.createElement('button');
@@ -1681,7 +1753,6 @@
     characterRow.appendChild(btn);
   });
 
-  /* --- 6. Общая логика перетаскивания --- */
   let draggedShape = null;
 
   const shapeSizes = { circle: 22, square: 22, triangle: 22, glyph: 24 };
@@ -1741,7 +1812,6 @@
     addShapeToCanvas(draggedShape, left, top);
   });
 
-  /* --- 7. Добавление элемента на холст --- */
   function addShapeToCanvas(shape, left, top) {
     const info = getShapeInfo(shape);
     if (!info) return;
@@ -1772,7 +1842,6 @@
     constructorCanvas.appendChild(el);
   }
 
-  /* --- 8. Перетаскивание внутри холста + снап --- */
   function makeCanvasShapeDraggable(el) {
     el.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
@@ -1842,7 +1911,6 @@
     return [left, top];
   }
 
-  /* --- 9. Быстрая сборка (шахматы и персонажи) --- */
   function loadTemplate(source, templateId) {
     constructorCanvas.innerHTML = '';
     const tpl = source[templateId];
@@ -1857,7 +1925,6 @@
     });
   }
 
-  /* --- 10. Действия --- */
   clearCanvasBtn.addEventListener('click', () => {
     constructorCanvas.innerHTML = '';
   });
