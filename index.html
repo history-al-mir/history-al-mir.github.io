@@ -150,16 +150,62 @@
     100% { opacity: 0; transform: translate(-50%, -16px); }
   }
 
+  .board-wrapper {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    justify-items: center;
+    gap: 10px;
+  }
+
+  .add-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px dashed #666;
+    background: #fff;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .add-btn:hover {
+    background: #f0f7ff;
+    border-color: #2196f3;
+    color: #2196f3;
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(33,150,243,0.35);
+  }
+  .add-btn:active {
+    transform: scale(0.94);
+  }
+  .add-btn.add-top    { grid-column: 2; grid-row: 1; }
+  .add-btn.add-left   { grid-column: 1; grid-row: 2; }
+  .add-btn.add-right  { grid-column: 3; grid-row: 2; }
+  .add-btn.add-bottom { grid-column: 2; grid-row: 3; }
+
   .board {
+    grid-column: 2;
+    grid-row: 2;
     display: grid;
     grid-template-columns: repeat(9, 60px);
     grid-template-rows: repeat(9, 60px);
     border: 2px solid #333;
     position: relative;
+    isolation: isolate;
   }
 
   :root {
-    --cell-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTAsIDUzKSIgb3BhY2l0eT0iMC4xMiI+CiAgICA8cGF0aCBkPSJNNTEuOTcyOSAwLjIzNjY5NEM2MS4xNjM4IDEuMTU0MDMgNjkuODgzMiA0LjcwOTgzIDc3LjA1ODIgMTAuNDY2NUM4NC4yMzMyIDE2LjIyMzIgODkuNTUwNyAyMy45Mjk2IDkyLjM1NjUgMzIuNjM3NUM5NS4xNjIyIDQxLjM0NTQgOTUuMzMzOCA1MC42NzUgOTIuODUwMSA1OS40NzgxQzkwLjM2NjQgNjguMjgxMyA4NS4zMzU5IDc2LjE3NCA3OC4zNzczIDgyLjE4NTJDNzEuNDE4OCA4OC4xOTYzIDYyLjgzNTkgOTIuMDYzNiA1My42ODQ4IDkzLjMxMTJDNDQuNTMzNyA5NC41NTg4IDM1LjIxMzYgOTMuMTMyMiAyNi44NzEzIDg5LjIwNzFDMTguNTI5IDg1LjI4MTkgMTEuNTI4NCA3OS4wMjk1IDYuNzMwOTcgNzEuMjE4OUMxLjkzMzU1IDYzLjQwODQgLTAuMjkwNTk1IDU0LjUwOTIgMC4wMzAzNDY1IDQ1LjM3NUwxMi4wNjQxIDQ2LjQwNjJDMTEuODI1OSA1My4xODU0IDEzLjYwOTEgNTkuMTQ1NiAxNy4xNjk2IDY0Ljk0MjRDMjAuNzMwMSA3MC43MzkxIDI1LjkyNTggNzUuMzc5NSAzMi4xMTcyIDc4LjI5MjdDMzguMzA4NiA4MS4yMDU4IDQ1LjIyNTcgODIuMjY0NSA1Mi4wMTc0IDgxLjMzODY1OC44MDkxIDgwLjQxMjcgNjUuMTc5MSA3Ny41NDI1IDcwLjM0MzUgNzMuMDgxMkM3NS41MDc5IDY4LjYxOTkgNzkuMjQxNSA2Mi43NjIyIDgxLjA4NDggNTYuMjI4N0M4Mi45MjgxIDQ5LjY5NTIgODIuODAwOCA0Mi43NzExIDgwLjcxODQgMzYuMzA4M0M3OC42MzYgMjkuODQ1NiA3NC42ODk1IDI0LjEyNjEgNjkuMzY0NSAxOS44NTM2QzY0LjAzOTQgMTUuNTgxMiA1OC43OTQxIDEzLjA1NTggNTEuOTcyOSAxMi4zNzVWMC4yMzY2OTRaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTAuMzQxODA5IDQxLjI1QzEuNzc0MzEgMjkuOTE4MiA3LjIwNCAxOS4zMDEgMTUuODU1MyAxMS43NDExQzI0LjUwNjYgNC4xODEyMiAzNS42NDk3IDAuMDA2MTg1OTkgNDcuMTkyMSAwTDQ3LjE5NTggNi42NzEyQzM3LjI5NjEgNi42NzY1MSAyNy43Mzg4IDEwLjI1NzQgMjAuMzE4OCAxNi43NDEzQzEyLjg5ODggMjMuMjI1MyA4LjEyNjI5IDMyLjE2NjMgNi44OTc2NiA0MS44ODU0TDAuMzQxODA5IDQxLjI1WiIgZmlsbD0id2hpdGUiLz4KICAgIDxwYXRoIGQ9Ik0xMy40NzQzIDQyLjQ3NjFDMTQuMzMzIDM0LjE2NjEgMTguMjUwNyAyNi40NjIzIDI0LjQ3NzQgMjAuODM5NEMzMC43MDQxIDE1LjIxNjUgMzguODAyMyAxMi4wNjk2IDQ3LjIyMTcgMTIuMDAxMlYxOS4zMTI1QzQwLjYyMjQgMTkuMzY2MiAzNC4zMzU1IDIxLjg1NzkgMjkuNDU1IDI2LjI2NTNDMjQuNTc0NCAzMC42NzI2IDIxLjU0OTMgMzYuNjExNSAyMC44NzYyIDQzLjEyNUwxMy40NzQzIDQyLjQ3NjFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTI3LjA2NjMgNDMuNjc0MUMyNy42MTg0IDM4LjcyNjIgMjkuOTYwNiAzNC4xNDI4IDMzLjY2MDcgMzAuNzY5NkMzNy4zNjA3IDI3LjM5NjQgNDIuMTY5IDI1LjQ2MTEgNDcuMTk4MyAyNS4zMjA3TDQ3LjIxNzcgMzEuOTY4OEM0My44MTgyIDMyLjA2MzcgNDAuNzM5MiAzMy40MDQ5IDM4LjIzODIgMzUuNjg0OUMzNS43MzcyIDM3Ljk2NSAzNC4yMzA2IDQwLjkwNTUgMzMuODU3NCA0NC4yNUwyNy4wNjYzIDQzLjY3NDFaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik02OC45MzY1IDQ2LjE2MzVDNjQuNzQ0OCA1NC4zMjI4IDU4LjI3ODMgNjEuMDQ4NiA0OC43Mzk4IDY2LjQzMDRDNDUuODMzMiA2OC4wNjk5IDQyLjY0MjEgNjkuNTg1NyAzOS4xNDE4IDcwLjk3ODhDMzYuMjQxMyA3Mi4wMDcyIDMzLjc4MTcgNzEuMzA0NSAzMS42OTk3IDY5LjcxNDlDMzAuNTE2MSA2OC44MTEzIDI4Ljg3ODUgNjYuNzM4OCAyNy45MDA0IDY1LjQzNzFDMjYuMjQ4MSA2My4yMzggMjcuNDU0NiA2MS45OTY0IDI4LjgwNTEgNjAuMzcyN0MyOS45NzA4IDU4Ljk3MSAzMS41NTc1IDU3LjY0NzYgMzIuNjI2NSA1Ni40ODNDMzQuNDQ5NCA1NC40OTQ2IDM2LjIxODggNTMuNjU3OCAzOC4zNjg0IDU1Ljc1NDdDNDAuMzA3MiA1Ny42NDQzIDQyLjU3MSA2MC45MzggNDUuNTMzMiA1OC43OTk0QzUwLjAxMjMgNTUuNTY0NiA1NC42OTg3IDUxLjYwNzkgNTguMDkzOCA0Ny4xNzA5QzU5LjMzNDYgNDUuNTQ3NSA2MC4zNDcxIDQzLjY4OTEgNTguNjc1MyA0MS43OTU1TDU2LjIyODQgMzkuMDQ3MUM1My43MDg5IDM2LjIxNjMgNTQuODM1IDM1LjMwMiA1Ni45NjI4IDMzLjEzOTJMNjAuMjM5OCAyOS41NjI2QzYyLjAxMTEgMjcuMzg1OCA2My42NjM3IDI3LjAxNDUgNjUuMTM3NCAyNy42NjI1QzY2Ljk3ODQgMjguNDcxMSA3MC4yNjU1IDMyLjQ4NzggNzAuOTQ2OCAzNC4yNTMxQzcyLjQzMyAzOC4xMDQ2IDcwLjc0MDcgNDIuNjUzMyA2OC45MzY1IDQ2LjE2MzVaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTk0LjU3MjUgODguMzkyOUM5My41NjgyIDg4LjM5MjkgOTIuNjUyNSA4OC4xNTczIDkxLjgyNTUgODcuNjg2QzkxLjAxMzIgODcuMjE0NyA5MC4zNzA3IDg2LjU3NCA4OS44OTgxIDg1Ljc2NEM4OS40MjU1IDg0Ljk1NCA4OS4xODkyIDg0LjA0ODIgODkuMTg5MiA4My4wNDY4Qzg5LjE4OTIgODIuMDMwNiA4OS40MjU1IDgxLjExNzQgODkuODk4MSA4MC4zMDc0QzkwLjM3MDcgNzkuNDk3NCA5MS4wMTMyIDc4Ljg1NjggOTEuODI1NSA3OC4zODU1QzkyLjY1MjUgNzcuOTE0MiA5My41NjgyIDc3LjY3ODYgOTQuNTcyNSA3Ny42Nzg2Qzk1LjYwNjMgNzcuNjc4NiA5Ni41MjkzIDc3LjkxNDIgOTcuMzQxNiA3OC4zODU1Qzk4LjE1MzkgNzguODU2OCA5OC43OTYzIDc5LjQ5NzQgOTkuMjY4OSA4MC4zMDc0Qzk5Ljc1NjMgODEuMTE3NCAxMDAgODIuMDMwNiAxMDAgODMuMDQ2OEMxMDAgODQuMDYzIDk5Ljc1NjMgODQuOTc2MSA5OS4yNjg5IDg1Ljc4NjFDOTguNzk2MyA4Ni41ODE0IDk4LjE0NjUgODcuMjE0NyA5Ny4zMTk1IDg3LjY4NkM5Ni41MDcyIDg4LjE1NzMgOTUuNTkxNSA4OC4zOTI5IDk0LjU3MjUgODguMzkyOVpNOTQuNTk0NiA4Ny41NzU1Qzk1LjQ1MTIgODcuNTc1NSA5Ni4yMjY2IDg3LjM3NjYgOTYuOTIwNyA4Ni45NzlDOTcuNjE0OSA4Ni41NjY2IDk4LjE1MzkgODYuMDIxNyA5OC41Mzc5IDg1LjM0NDJDOTguOTM2NyA4NC42NTIgOTkuMTM2MSA4My44ODYyIDk5LjEzNjEgODMuMDQ2OEM5OS4xMzYxIDgyLjE5MjYgOTguOTM2NyA4MS40MjY3IDk4LjUzNzkgODAuNzQ5M0M5OC4xMzkyIDgwLjA1NzEgOTcuNTkyNyA3OS41MTIxIDk2Ljg5ODYgNzkuMTE0NUM5Ni4yMTkyIDc4LjcwMjEgOTUuNDUxMiA3OC40OTYgOTQuNTk0NiA3OC40OTZDOTMuNzUyOCA3OC40OTYgOTIuOTg0OCA3OC43MDIxIDkyLjI5MDcgNzkuMTE0NUM5MS41OTY1IDc5LjUxMjEgOTEuMDQyNyA4MC4wNTcxIDkwLjYyOTIgODAuNzQ5M0M5MC4yMzA0IDgxLjQyNjcgOTAuMDMxIDgyLjE5MjYgOTAuMDMxIDgzLjA0NjhDOTAuMDMxIDgzLjg4NjIgOTAuMjMwNCA4NC42NTIgOTAuNjI5MiA4NS4zNDQyQzkxLjA0MjcgODYuMDIxNyA5MS41ODkxIDg2LjU2NjYgOTIuMjY4NSA4Ni45NzlDOTIuOTYyNiA4Ny4zNzY2IDkzLjczOCA4Ny41NzU1IDk0LjU5NDYgODcuNTc1NVpNOTIuNjQ1MSA4NS45NDA3VjgwLjEzMDdIOTQuNTI4MkM5NS4xNzggODAuMTMwNyA5NS42ODAxIDgwLjI3MDcgOTYuMDM0NiA4MC41NTA1Qzk2LjQwMzggODAuODE1NiA5Ni41ODg0IDgxLjE5ODUgOTYuNTg4NCA4MS42OTkyQzk2LjU4ODQgODIuMjE0NyA5Ni4zNzQyIDgyLjY0OTEgOTUuOTQ1OSA4My4wMDI2Qzk1LjUzMjQgODMuMzQxMyA5NC45Nzg2IDgzLjUxMDcgOTQuMjg0NCA4My41MTA3SDkyLjY4OTRWODIuODkyMkg5NC4yODQ0Qzk0Ljc0MjMgODIuODkyMiA5NS4xMTE1IDgyLjc4MTYgOTUuMzkyMSA4Mi41NjA3Qzk1LjY3MjcgODIuMzI1MSA5NS44MTMxIDgyLjAzOCA5NS44MTMxIDgxLjY5OTJDOTUuODEzMSA4MS4zODk5IDk1LjY5NDkgODEuMTU0MyA5NS40NTg2IDgwLjk5MjJDOTUuMjM3IDgwLjgzMDIgOTQuOTI2OSA4MC43NDkzIDk0LjUyODIgODAuNzQ5M0g5My40MjA1Vjg1Ljk0MDdIOTIuNjQ1MVpNOTYuMTg5NyA4NS45NDA3TDk0LjM3MzEgODMuMTc5M0w5NS4wODIgODMuMTM1MUw5Ny4xMjAxIDg1Ljk0MDdIOTYuMTg5N1oiIGZpbGw9IndoaXRlIi8+CiAgPC9nPgo8L3N2Zz4K");
+    --cell-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1MCwgNTMpIiBvcGFjaXR5PSIwLjEyIj4KICAgIDxwYXRoIGQ9Ik01MS45NzI5IDAuMjM2Njk0QzYxLjE2MzggMS4xNTQwMyA2OS44ODMyIDQuNzA5ODMgNzcuMDU4MiAxMC40NjY1Qzg0LjIzMzIgMTYuMjIzMiA4OS41NTA3IDIzLjkyOTYgOTIuMzU2NSAzMi42Mzc1Qzk1LjE2MjIgNDEuMzQ1NCA5NS4zMzM4IDUwLjY3NSA5Mi44NTAxIDU5LjQ3ODFDOTAuMzY2NCA2OC4yODEzIDg1LjMzNTkgNzYuMTc0IDc4LjM3NzMgODIuMTg1MkM3MS40MTg4IDg4LjE5NjMgNjIuODM1OSA5Mi4wNjM2IDUzLjY4NDggOTMuMzExMkM0NC41MzM3IDk0LjU1ODggMzUuMjEzNiA5My4xMzIyIDI2Ljg3MTMgODkuMjA3MUMxOC41MjkgODUuMjgxOSAxMS41Mjg0IDc5LjAyOTUgNi43MzA5NyA3MS4yMTg5QzEuOTMzNTUgNjMuNDA4NCAtMC4yOTA1OTUgNTQuNTA5MiAwLjAzMDM0NjUgNDUuMzc1TDEyLjA2NDEgNDYuNDA2MkMxMS44MjU5IDUzLjE4NTQgMTMuNjA5MSA1OS4xNDU2IDE3LjE2OTYgNjQuOTQyNEMyMC43MzAxIDcwLjczOTEgMjUuOTI1OCA3NS4zNzk1IDMyLjExNzIgNzguMjkyN0MzOC4zMDg2IDgxLjIwNTggNDUuMjI1NyA4Mi4yNjQ1IDUyLjAxNzQgODEuMzM4NjU4LjgwOTEgODAuNDEyNyA2NS4xNzkxIDc3LjU0MjUgNzAuMzQzNSA3My4wODEyQzc1LjUwNzkgNjguNjE5OSA3OS4yNDE1IDYyLjc2MjIgODEuMDg0OCA1Ni4yMjg3QzgyLjkyODEgNDkuNjk1MiA4Mi44MDA4IDQyLjc3MTEgODAuNzE4NCAzNi4zMDgzQzc4LjYzNiAyOS44NDU2IDc0LjY4OTUgMjQuMTI2MSA2OS4zNjQ1IDE5Ljg1MzZDNjQuMDM5NCAxNS41ODEyIDU4Ljc5NDEgMTMuMDU1OCA1MS45NzI5IDEyLjM3NVYwLjIzNjY5NFoiIGZpbGw9IndoaXRlIi8+CiAgICA8cGF0aCBkPSJNMC4zNDE4MDkgNDEuMjVDMS43NzQzMSAyOS45MTgyIDcuMjA0IDE5LjMwMSAxNS44NTUzIDExLjc0MTFDMjQuNTA2NiA0LjE4MTIyIDM1LjY0OTcgMC4wMDYxODU5OSA0Ny4xOTIxIDBMNDcuMTk1OCA2LjY3MTJDMzcuMjk2MSA2LjY3NjUxIDI3LjczODggMTAuMjU3NCAyMC4zMTg4IDE2Ljc0MTNDMTIuODk4OCAyMy4yMjUzIDguMTI2MjkgMzIuMTY2MyA2Ljg5NzY2IDQxLjg4NTRMMC4zNDE4MDkgNDEuMjVaIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHBhdGggZD0iTTEzLjQ3NDMgNDIuNDc2MUMxNC4zMzMgMzQuMTY2MSAxOC4yNTA3IDI2LjQ2MjMgMjQuNDc3NCAyMC44Mzk0QzMwLjcwNDEgMTUuMjE2NSAzOC44MDIzIDEyLjA2OTYgNDcuMjIxNyAxMi4wMDEyVjE5LjMxMjVDNDAuNjIyNCAxOS4zNjYyIDM0LjMzNTUgMjEuODU3OSAyOS40NTUgMjYuMjY1M0MyNC41NzQ0IDMwLjY3MjYgMjEuNTQ5MyAzNi42MTE1IDIwLjg3NjIgNDMuMTI1TDEzLjQ3NDMgNDIuNDc2MVoiIGZpbGw9IndoaXRlIi8+CiAgICA8cGF0aCBkPSJNMjcuMDY2MyA0My42NzQxQzI3LjYxODQgMzguNzI2MiAyOS45NjA2IDM0LjE0MjggMzMuNjYwNyAzMC43Njk2QzM3LjM2MDcgMjcuMzk2NCA0Mi4xNjkgMjUuNDYxMSA0Ny4xOTgzIDI1LjMyMDdMNDcuMjE3NyAzMS45Njg4QzQzLjgxODIgMzIuMDYzNyA0MC43MzkyIDMzLjQwNDkgMzguMjM4MiAzNS42ODQ5QzM1LjczNzIgMzcuOTY1IDM0LjIzMDYgNDAuOTA1NSAzMy44NTc0IDQ0LjI1TDI3LjA2NjMgNDMuNjc0MVoiIGZpbGw9IndoaXRlIi8+CiAgICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTY4LjkzNjUgNDYuMTYzNUM2NC43NDQ4IDU0LjMyMjggNTguMjc4MyA2MS4wNDg2IDQ4LjczOTggNjYuNDMwNEM0NS44MzMyIDY4LjA2OTkgNDIuNjQyMSA2OS41ODU3IDM5LjE0MTggNzAuOTc4OEMzNi4yNDEzIDcyLjAwNzIgMzMuNzgxNyA3MS4zMDQ1IDMxLjY5OTcgNjkuNzE0OUMzMC41MTYxIDY4LjgxMTMgMjguODc4NSA2Ni43Mzg4IDI3LjkwMDQgNjUuNDM3MUMyNi4yNDgxIDYzLjIzOCAyNy40NTQ2IDYxLjk5NjQgMjguODA1MSA2MC4zNzI3QzI5Ljk3MDggNTguOTcxIDMxLjU1NzUgNTcuNjQ3NiAzMi42MjY1IDU2LjQ4M0MzNC40NDk0IDU0LjQ5NDYgMzYuMjE4OCA1My42NTc4IDM4LjM2ODQgNTUuNzU0N0M0MC4zMDcyIDU3LjY0NDMgNDIuNTcxIDYwLjkzOCA0NS41MzMyIDU4Ljc5OTRDNTAuMDEyMyA1NS41NjQ2IDU0LjY5ODcgNTEuNjA3OSA1OC4wOTM4IDQ3LjE3MDlDNTkuMzM0NiA0NS41NDc1IDYwLjM0NzEgNDMuNjg5MSA1OC42NzUzIDQxLjc5NTVMNTYuMjI4NCAzOS4wNDcxQzUzLjcwODkgMzYuMjE2MyA1NC44MzUgMzUuMzAyIDU2Ljk2MjggMzMuMTM5Mkw2MC4yMzk4IDI5LjU2MjZDNjIuMDExMSAyNy4zODU4IDYzLjY2MzcgMjcuMDE0NSA2NS4xMzc0IDI3LjY2MjVDNjYuOTc4NCAyOC40NzExIDcwLjI2NTUgMzIuNDg3OCA3MC45NDY4IDM0LjI1MzFDNzIuNDMzIDM4LjEwNDYgNzAuNzQwNyA0Mi42NTMzIDY4LjkzNjUgNDYuMTYzNVoiIGZpbGw9IndoaXRlIi8+CiAgICA8cGF0aCBkPSJNOTQuNTcyNSA4OC4zOTI5QzkzLjU2ODIgODguMzkyOSA5Mi42NTI1IDg4LjE1NzMgOTEuODI1NSA4Ny42ODZDOTEuMDEzMiA4Ny4yMTQ3IDkwLjM3MDcgODYuNTc0IDg5Ljg5ODEgODUuNzY0Qzg5LjQyNTUgODQuOTU0IDg5LjE4OTIgODQuMDQ4MiA4OS4xODkyIDgzLjA0NjhDODkuMTg5MiA4Mi4wMzA2IDg5LjQyNTUgODEuMTE3NCA4OS44OTgxIDgwLjMwNzRDOTAuMzcwNyA3OS40OTc0IDkxLjAxMzIgNzguODU2OCA5MS44MjU1IDc4LjM4NTVDOTIuNjUyNSA3Ny45MTQyIDkzLjU2ODIgNzcuNjc4NiA5NC41NzI1IDc3LjY3ODZDOTUuNjA2MyA3Ny42Nzg2IDk2LjUyOTMgNzcuOTE0MiA5Ny4zNDE2IDc4LjM4NTVDOTguMTUzOSA3OC44NTY4IDk4Ljc5NjMgNzkuNDk3NCA5OS4yNjg5IDgwLjMwNzRDOTkuNzU2MyA4MS4xMTc0IDEwMCA4Mi4wMzA2IDEwMCA4My4wNDY4QzEwMCA4NC4wNjMgOTkuNzU2MyA4NC45NzYxIDk5LjI2ODkgODUuNzg2MUM5OC43OTYzIDg2LjU4MTQgOTguMTQ2NSA4Ny4yMTQ3IDk3LjMxOTUgODcuNjg2Qzk2LjUwNzIgODguMTU3MyA5NS41OTE1IDg4LjM5MjkgOTQuNTcyNSA4OC4zOTI5Wk05NC41OTQ2IDg3LjU3NTVDOTUuNDUxMiA4Ny41NzU1IDk2LjIyNjYgODcuMzc2NiA5Ni45MjA3IDg2Ljk3OUM5Ny42MTQ5IDg2LjU2NjYgOTguMTUzOSA4Ni4wMjE3IDk4LjUzNzkgODUuMzQ0MkM5OC45MzY3IDg0LjY1MiA5OS4xMzYxIDgzLjg4NjIgOTkuMTM2MSA4My4wNDY4Qzk5LjEzNjEgODIuMTkyNiA5OC45MzY3IDgxLjQyNjcgOTguNTM3OSA4MC43NDkzQzk4LjEzOTIgODAuMDU3MSA5Ny41OTI3IDc5LjUxMjEgOTYuODk4NiA3OS4xMTQ1Qzk2LjIxOTIgNzguNzAyMSA5NS40NTEyIDc4LjQ5NiA5NC41OTQ2IDc4LjQ5NkM5My43NTI4IDc4LjQ5NiA5Mi45ODQ4IDc4LjcwMjEgOTIuMjkwNyA3OS4xMTQ1QzkxLjU5NjUgNzkuNTEyMSA5MS4wNDI3IDgwLjA1NzEgOTAuNjI5MiA4MC43NDkzQzkwLjIzMDQgODEuNDI2NyA5MC4wMzEgODIuMTkyNiA5MC4wMzEgODMuMDQ2OEM5MC4wMzEgODMuODg2MiA5MC4yMzA0IDg0LjY1MiA5MC42MjkyIDg1LjM0NDJDOTEuMDQyNyA4Ni4wMjE3IDkxLjU4OTEgODYuNTY2NiA5Mi4yNjg1IDg2Ljk3OUM5Mi45NjI2IDg3LjM3NjYgOTMuNzM4IDg3LjU3NTUgOTQuNTk0NiA4Ny41NzU1Wk05Mi42NDUxIDg1Ljk0MDdWODAuMTMwN0g5NC41MjgyQzk1LjE3OCA4MC4xMzA3IDk1LjY4MDEgODAuMjcwNyA5Ni4wMzQ2IDgwLjU1MDVDOTYuNDAzOCA4MC44MTU2IDk2LjU4ODQgODEuMTk4NSA5Ni41ODg0IDgxLjY5OTJDOTYuNTg4NCA4Mi4yMTQ3IDk2LjM3NDIgODIuNjQ5MSA5NS45NDU5IDgzLjAwMjZDOTUuNTMyNCA4My4zNDEzIDk0Ljk3ODYgODMuNTEwNyA5NC4yODQ0IDgzLjUxMDdIOTIuNjg5NFY4Mi44OTIySDk0LjI4NDRDOTQuNzQyMyA4Mi44OTIyIDk1LjExMTUgODIuNzgxNiA5NS4zOTIxIDgyLjU2MDdDOTUuNjcyNyA4Mi4zMjUxIDk1LjgxMzEgODIuMDM4IDk1LjgxMzEgODEuNjk5MkM5NS44MTMxIDgxLjM4OTkgOTUuNjk0OSA4MS4xNTQzIDk1LjQ1ODYgODAuOTkyMkM5NS4yMzcgODAuODMwMiA5NC45MjY5IDgwLjc0OTMgOTQuNTI4MiA4MC43NDkzSDkzLjQyMDVWODUuOTQwN0g5Mi42NDUxWk05Ni4xODk3IDg1Ljk0MDdMOTQuMzczMSA4My4xNzkzTDk1LjA4MiA4My4xMzUxTDk3LjEyMDEgODUuOTQwN0g5Ni4xODk3WiIgZmlsbD0id2hpdGUiLz4KICA8L2c+Cjwvc3ZnPgo=");
   }
 
   .cell {
@@ -177,10 +223,9 @@
     background-position: 0 0, 100px 100px, 0 0;
   }
 
-  /* бордовые (играбельные) клетки — увеличены и лежат выше чёрных */
   .cell.maroon {
     transform: scale(2);
-    z-index: 1;
+    z-index: 5;
   }
 
   .cell.maroon-dark {
@@ -223,7 +268,6 @@
     justify-content: center;
   }
 
-  /* фигуры лежат выше клеток */
   .piece {
     font-size: 44px;
     line-height: 1;
@@ -239,7 +283,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     position: relative;
     overflow: hidden;
-    z-index: 10;
+    z-index: 100;
   }
 
   .piece[data-symbol="👺"] {
@@ -372,31 +416,33 @@
     pointer-events: none;
   }
 
-  .shape-palette {
-    display: flex;
-    gap: 14px;
-  }
-  .shape-item {
-    cursor: grab;
-    width: 28px;
-    height: 28px;
+  .flag-item {
+    width: 46px;
+    height: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: grab;
+    transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+    overflow: hidden;
+    padding: 3px;
+    box-sizing: border-box;
   }
-  .shape-item.dragging { opacity: 0.4; }
-
-  .shape-circle {
-    width: 22px; height: 22px; border-radius: 50%; background: #2196f3;
+  .flag-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    border-color: #ff9800;
   }
-  .shape-square {
-    width: 22px; height: 22px; background: #4caf50;
-  }
-  .shape-triangle {
-    width: 0; height: 0;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 22px solid #ff9800;
+  .flag-item.dragging { opacity: 0.4; }
+  .flag-item svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    border-radius: 3px;
   }
 
   .shape-palette-row {
@@ -429,10 +475,29 @@
   }
   .glyph-item.dragging { opacity: 0.4; }
 
-  .constructor-canvas {
+  /* ---- ряд: холст + кнопка лупы ---- */
+  .constructor-canvas-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .constructor-canvas-wrap {
     position: relative;
     width: 60px;
     height: 60px;
+  }
+  .constructor-canvas-wrap.zoomed {
+    z-index: 100;
+  }
+
+  .constructor-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    box-sizing: border-box;
     background:
       linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px) 0 0 / 10px 10px,
       linear-gradient(0deg,  rgba(0,0,0,0.06) 1px, transparent 1px) 0 0 / 10px 10px,
@@ -440,10 +505,54 @@
     border: 2px dashed #999;
     border-radius: 6px;
     overflow: hidden;
+    transform-origin: top left;
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease;
+    will-change: transform;
   }
   .constructor-canvas.drag-over {
     border-color: #2196f3;
     background-color: #f0f7ff;
+  }
+  .constructor-canvas-wrap.zoomed .constructor-canvas {
+    transform: scale(3);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.45), 0 0 0 1px rgba(33,150,243,0.25);
+    border-color: #2196f3;
+  }
+
+  /* кнопка лупы рядом с холстом */
+  .zoom-toggle {
+    position: relative;
+    z-index: 150;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+  .zoom-toggle:hover {
+    background: #f0f7ff;
+    border-color: #2196f3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(33,150,243,0.3);
+  }
+  .zoom-toggle.active {
+    background: #fff3e0;
+    border-color: #ff9800;
+    color: #6d3b00;
+    box-shadow: 0 2px 6px rgba(255,152,0,0.35);
+  }
+  .zoom-toggle.active:hover {
+    background: #ffe0b2;
   }
 
   .canvas-shape {
@@ -462,10 +571,68 @@
     color: #222;
     user-select: none;
   }
+  .canvas-shape.canvas-flag svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  /* всплывающая подсказка вместо значка 🎨 */
+  .canvas-shape[data-flag]::before {
+    content: attr(data-flag-label);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(3px);
+    background: rgba(38, 50, 56, 0.96);
+    color: #fff;
+    font-size: 10px;
+    line-height: 1.2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 300;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    font-family: sans-serif;
+  }
+  /* хвостик тултипа */
+  .canvas-shape[data-flag]::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%) translateY(3px);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(38, 50, 56, 0.96);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 300;
+  }
+  .canvas-shape[data-flag]:hover::before,
+  .canvas-shape[data-flag]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* подсветка формы, когда над ней тащат флаг */
+  .canvas-shape.flag-target {
+    outline: 2px dashed #ff9800;
+    outline-offset: 2px;
+  }
 
   .constructor-actions {
     display: flex;
     gap: 8px;
+    position: relative;
+    z-index: 150;
   }
   .constructor-actions button {
     padding: 6px 12px;
@@ -481,20 +648,19 @@
     border-color: #2196f3;
   }
 
-  /* фигура на клетке — выше фона клетки, но ниже маркеров */
+  /* фигура на клетке — БЕЗ поворота */
   .cell .piece {
     box-shadow: none;
     background: transparent;
-    transform: rotate(-45deg);
     position: relative;
-    z-index: 10;
+    z-index: 20;
   }
 
   .cell-effect {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
   }
 
   .effect-blood-old {
@@ -536,7 +702,7 @@
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    z-index: 1000;
+    z-index: 10000;
     font-size: 12px;
     width: 230px;
     transform: translate(-50%, -110%);
@@ -588,19 +754,21 @@
     cursor: not-allowed;
   }
 
-  /* маркеры ходов/срубаний — накрывают всю клетку, чтобы по ним было
-     легко кликнуть, а сам значок рисуется внутри по центру */
   .move-marker,
   .capture-marker {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 30;             /* выше фигур (z-index: 10) */
+    z-index: 500;
     pointer-events: auto;
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
   .move-marker svg,
   .capture-marker svg {
@@ -640,8 +808,7 @@
     line-height: 14px;
     text-align: center;
     pointer-events: none;
-    z-index: 20;
-    transform: rotate(-45deg);
+    z-index: 300;
   }
 
   .hint {
@@ -687,7 +854,13 @@
 
   <div class="main-column">
 
-<div class="board" id="board"></div>
+<div class="board-wrapper">
+  <button class="add-btn add-top"    data-side="top"    title="Добавить 2 ряда сверху">+</button>
+  <button class="add-btn add-left"   data-side="left"   title="Добавить 2 столбца слева">+</button>
+  <div class="board" id="board"></div>
+  <button class="add-btn add-right"  data-side="right"  title="Добавить 2 столбца справа">+</button>
+  <button class="add-btn add-bottom" data-side="bottom" title="Добавить 2 ряда снизу">+</button>
+</div>
 
 <div class="tray" id="tray">
   <div class="piece" draggable="true" data-symbol="♔">♔</div>
@@ -719,17 +892,33 @@
   </div>
 
   <div class="palette-group">
+    <div class="palette-label">Лица (максимальная детализация)</div>
+    <div class="part-palette" id="maxFacePalette"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Одежда</div>
+    <div class="part-palette" id="clothingPalette"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Флаги (перетащите на любую форму — покрасит её)</div>
+    <div class="part-palette" id="flagPalette"></div>
+  </div>
+
+  <div class="palette-group">
+    <div class="palette-label">Эмоции и смайлики</div>
+    <div class="part-palette" id="emojiPalette"></div>
+  </div>
+
+  <div class="palette-group">
     <div class="palette-label">Части фигур (перетащите на холст)</div>
     <div class="part-palette" id="partPalette"></div>
   </div>
 
   <div class="palette-group">
     <div class="palette-label">Простые формы</div>
-    <div class="shape-palette">
-      <div class="shape-item" draggable="true" data-shape="circle"><div class="shape-circle"></div></div>
-      <div class="shape-item" draggable="true" data-shape="square"><div class="shape-square"></div></div>
-      <div class="shape-item" draggable="true" data-shape="triangle"><div class="shape-triangle"></div></div>
-    </div>
+    <div class="part-palette" id="shapePalette"></div>
   </div>
 
   <div class="palette-group">
@@ -737,7 +926,13 @@
     <div class="shape-palette-row" id="glyphPalette"></div>
   </div>
 
-  <div class="constructor-canvas" id="constructorCanvas"></div>
+  <div class="constructor-canvas-row">
+    <div class="constructor-canvas-wrap" id="canvasWrap">
+      <div class="constructor-canvas" id="constructorCanvas"></div>
+    </div>
+    <button class="zoom-toggle" id="zoomToggleBtn" type="button" title="Режим лупы (увеличить холст)">🔍</button>
+  </div>
+
   <div class="constructor-actions">
     <button id="addToTrayBtn">Добавить в лоток</button>
     <button id="clearCanvasBtn">Очистить</button>
@@ -747,9 +942,12 @@
 <div class="hint">
   Перетащите фигуру мышью на бордовую клетку (можно вернуть обратно в лоток).
   Гоблина 👺 можно ставить и на чёрные клетки — они закрыты для всех остальных фигур.
-  Гоблин ходит по диагонали через любые клетки (и бордовые, и чёрные), а рубит только
-  «соседние» клетки своего цвета: с бордовой — бордовые, с чёрной — чёрные по вертикали/горизонтали.
-  Долгое нажатие на клетку открывает меню внешнего вида и способностей.
+  Гоблин ходит по диагонали через клетки обоих цветов. Рубит он только соседние
+  клетки своего цвета: атакой гоблин встаёт на место врага и выбивает его.
+  Кнопки «+» по краям арены добавляют по 2 ряда/столбца к выбранной стороне.
+  Кнопка 🔍 включает «режим лупы» — холст конструктора увеличивается в 3 раза.
+  Перетащите флаг на ЛЮБУЮ форму (лицо, одежду, круг, эмоцию) — он «покрасит» её
+  узором флага. Двойной клик — снять флаг (второй двойной клик удалит элемент).
 </div>
 
   </div>
@@ -761,49 +959,98 @@
      ============================================================ */
   const board = document.getElementById('board');
   const tray = document.getElementById('tray');
-  const rows = 9;
-  const cols = 9;
 
-  // 4x4 сетка "играбельных" (бордовых) клеток — используется для расчёта ходов фигур
-  const LATTICE_SIZE = 4;
-  const latticeGrid = Array.from({ length: LATTICE_SIZE }, () => Array(LATTICE_SIZE).fill(null));
+  let boardRows = 9;
+  let boardCols = 9;
+  let latticeRows = 4;
+  let latticeCols = 4;
+  let latticeGrid = [];
+  let gridCells = [];
 
-  // полная сетка всех отрисованных клеток (и бордовых, и чёрных) в координатах 9x9.
-  // нужна гоблину, который умеет ходить и по чёрным клеткам.
-  const gridCells = Array.from({ length: rows }, () => Array(cols).fill(null));
+  function buildBoard() {
+    board.innerHTML = '';
+    board.style.gridTemplateColumns = `repeat(${boardCols}, 60px)`;
+    board.style.gridTemplateRows    = `repeat(${boardRows}, 60px)`;
 
-  for (let row = 0; row < rows; row++) {
-    const isEvenLine = (row + 1) % 2 === 0;
-    for (let col = 0; col < cols; col++) {
-      if ((row + col) % 2 === 0) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.dataset.gridRow = row;
-        cell.dataset.gridCol = col;
+    latticeRows = (boardRows - 1) / 2;
+    latticeCols = (boardCols - 1) / 2;
 
-        if (isEvenLine) {
-          cell.classList.add('maroon');
-          const latticeRow = (row - 1) / 2;
-          const latticeCol = (col - 1) / 2;
-          const isDark = (latticeRow + latticeCol) % 2 === 0;
-          cell.classList.add(isDark ? 'maroon-dark' : 'maroon-light');
-          cell.dataset.latticeRow = latticeRow;
-          cell.dataset.latticeCol = latticeCol;
-          latticeGrid[latticeRow][latticeCol] = cell;
-        } else {
-          // "чёрная" клетка — обычные фигуры сюда ставить нельзя, только гоблина
-          cell.classList.add('black-cell');
+    gridCells = Array.from({ length: boardRows }, () => new Array(boardCols).fill(null));
+    latticeGrid = Array.from({ length: latticeRows }, () => new Array(latticeCols).fill(null));
+
+    for (let row = 0; row < boardRows; row++) {
+      const isEvenLine = (row + 1) % 2 === 0;
+      for (let col = 0; col < boardCols; col++) {
+        if ((row + col) % 2 === 0) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.gridRow = row;
+          cell.dataset.gridCol = col;
+
+          if (isEvenLine) {
+            cell.classList.add('maroon');
+            const lr = (row - 1) / 2;
+            const lc = (col - 1) / 2;
+            const isDark = (lr + lc) % 2 === 0;
+            cell.classList.add(isDark ? 'maroon-dark' : 'maroon-light');
+            cell.dataset.latticeRow = lr;
+            cell.dataset.latticeCol = lc;
+            latticeGrid[lr][lc] = cell;
+          } else {
+            cell.classList.add('black-cell');
+          }
+
+          gridCells[row][col] = cell;
+          cell.style.gridRowStart = row + 1;
+          cell.style.gridColumnStart = col + 1;
+          board.appendChild(cell);
+          setupDropZone(cell);
+          setupLongPress(cell);
         }
-
-        gridCells[row][col] = cell;
-        cell.style.gridRowStart = row + 1;
-        cell.style.gridColumnStart = col + 1;
-        board.appendChild(cell);
-        setupDropZone(cell);
-        setupLongPress(cell);
       }
     }
   }
+
+  function expandBoard(side) {
+    const saved = [];
+    for (let r = 0; r < boardRows; r++) {
+      for (let c = 0; c < boardCols; c++) {
+        const cell = gridCells[r][c];
+        if (!cell || !cell._stack) continue;
+        cell._stack.forEach(p => saved.push({ piece: p, row: r, col: c }));
+      }
+    }
+
+    let shiftR = 0, shiftC = 0;
+    if (side === 'top')    { boardRows += 2; shiftR = 2; }
+    if (side === 'bottom') { boardRows += 2; }
+    if (side === 'left')   { boardCols += 2; shiftC = 2; }
+    if (side === 'right')  { boardCols += 2; }
+
+    buildBoard();
+
+    saved.forEach(({ piece, row, col }) => {
+      const nr = row + shiftR;
+      const nc = col + shiftC;
+      if (nr < 0 || nr >= boardRows || nc < 0 || nc >= boardCols) return;
+      const cell = gridCells[nr][nc];
+      if (!cell) return;
+      cell._stack.push(piece);
+      cell.appendChild(piece);
+    });
+
+    for (let r = 0; r < boardRows; r++) {
+      for (let c = 0; c < boardCols; c++) {
+        if (gridCells[r][c]) updateCellVisuals(gridCells[r][c]);
+      }
+    }
+  }
+
+  buildBoard();
+
+  document.querySelectorAll('.add-btn').forEach((btn) => {
+    btn.addEventListener('click', () => expandBoard(btn.dataset.side));
+  });
 
   /* ============================================================
      DRAG & DROP ФИГУР НА ДОСКЕ
@@ -870,13 +1117,10 @@
     '👺': { color: 'goblin', type: 'goblin' }
   };
 
-  // гоблин-эмодзи — U+1F47A; проверяем codePoint, чтобы не зависеть от
-  // возможных variation-selector'ов в строке
   const GOBLIN_CODEPOINT = 0x1F47A;
 
   function getPieceInfo(pieceEl) {
     if (!pieceEl) return null;
-    // если фигуре было присвоено поведение — оно в приоритете
     if (pieceEl.dataset.behaviorType && pieceEl.dataset.behaviorColor) {
       return { type: pieceEl.dataset.behaviorType, color: pieceEl.dataset.behaviorColor };
     }
@@ -902,14 +1146,14 @@
   }
 
   /* ============================================================
-     ХОДЫ ОБЫЧНЫХ ФИГУР
+     ХОДЫ ОБЫЧНЫХ ФИГУР (по бордовой сетке)
      ============================================================ */
   function occupantColorAt(r, c) {
     return occupantColorAtCell(latticeGrid[r] && latticeGrid[r][c]);
   }
 
   function inLatticeBounds(r, c) {
-    return r >= 0 && r < LATTICE_SIZE && c >= 0 && c < LATTICE_SIZE;
+    return r >= 0 && r < latticeRows && c >= 0 && c < latticeCols;
   }
 
   const ORTHO_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -975,15 +1219,8 @@
 
   /* ============================================================
      СПОСОБНОСТИ ГОБЛИНА
-     ============================================================
-     • Ходит по диагонали — шаг (±1, ±1) сохраняет чётность row+col,
-       поэтому гоблин переходит с бордовой клетки на чёрную и обратно.
-       Скользит, пока путь свободен; наскоком не рубит.
-     • Рубит только «соседние» клетки того же цвета, что и текущая:
-       с бордовой клетки — бордовых соседей (шаг ±2 по одной оси),
-       с чёрной клетки  — чёрных соседей (тоже шаг ±2 по одной оси).
      ============================================================ */
-  const GOBLIN_DIAG_DIRS  = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+  const GOBLIN_DIAG_DIRS   = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
   const GOBLIN_STRIKE_DIRS = [[-2, 0], [2, 0], [0, -2], [0, 2]];
 
   function computeGoblinMoves(gridRow, gridCol) {
@@ -991,7 +1228,7 @@
     for (const [dr, dc] of GOBLIN_DIAG_DIRS) {
       let r = gridRow + dr;
       let c = gridCol + dc;
-      while (r >= 0 && r < rows && c >= 0 && c < cols) {
+      while (r >= 0 && r < boardRows && c >= 0 && c < boardCols) {
         const cell = gridCells[r][c];
         if (!cell) break;
         if (topPieceAt(cell)) break;
@@ -1003,20 +1240,15 @@
     return results;
   }
 
-  function computeGoblinStrikes(gridRow, gridCol, goblinColor) {
+  function computeGoblinStrikes(gridRow, gridCol) {
     const results = [];
     for (const [dr, dc] of GOBLIN_STRIKE_DIRS) {
       const r = gridRow + dr;
       const c = gridCol + dc;
-      if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+      if (r < 0 || r >= boardRows || c < 0 || c >= boardCols) continue;
       const cell = gridCells[r][c];
       if (!cell) continue;
-      const top = topPieceAt(cell);
-      if (!top) continue;
-      const tInfo = getPieceInfo(top);
-      const tColor = tInfo ? tInfo.color : 'unknown';
-      // гоблин не бьёт своих (другого гоблина без переназначенного поведения)
-      if (tColor !== goblinColor) {
+      if (topPieceAt(cell)) {
         results.push({ gridRow: r, gridCol: c });
       }
     }
@@ -1066,17 +1298,17 @@
       if (Number.isNaN(gr) || Number.isNaN(gc)) return;
 
       computeGoblinMoves(gr, gc).forEach((m) => {
-        entries.push({ cell: gridCells[m.gridRow][m.gridCol], capture: false, strike: false });
+        entries.push({ cell: gridCells[m.gridRow][m.gridCol], capture: false });
       });
-      computeGoblinStrikes(gr, gc, info.color).forEach((s) => {
-        entries.push({ cell: gridCells[s.gridRow][s.gridCol], capture: true, strike: true });
+      computeGoblinStrikes(gr, gc).forEach((s) => {
+        entries.push({ cell: gridCells[s.gridRow][s.gridCol], capture: true });
       });
     } else {
       if (cell.dataset.latticeRow === undefined) return;
       const fromRow = parseInt(cell.dataset.latticeRow, 10);
       const fromCol = parseInt(cell.dataset.latticeCol, 10);
       computeReachableMoves(fromRow, fromCol, info.type, info.color).forEach((m) => {
-        entries.push({ cell: latticeGrid[m.row][m.col], capture: m.capture, strike: false });
+        entries.push({ cell: latticeGrid[m.row][m.col], capture: m.capture });
       });
     }
 
@@ -1084,30 +1316,25 @@
 
     abilityMode = { sourceCell: cell, piece: topPiece };
 
-    entries.forEach(({ cell: targetCell, capture, strike }) => {
+    entries.forEach(({ cell: targetCell, capture }) => {
       if (!targetCell) return;
 
       const marker = document.createElement('div');
       marker.className = capture ? 'capture-marker' : 'move-marker';
       marker.innerHTML = capture ? CAPTURE_MARKER_SVG : MOVE_MARKER_SVG;
-      if (strike) marker.title = 'Удар по соседней клетке (гоблин остаётся на месте)';
+      marker.title = capture
+        ? 'Атака: гоблин встанет на эту клетку и выбьет фигуру'
+        : 'Ход';
 
-      // гасим события до клика, чтобы не сработала отмена режима
       marker.addEventListener('mousedown', (e) => {
         e.stopPropagation();
         e.preventDefault();
-      });
-      // и на всякий случай — click тоже с остановкой всплытия
-      marker.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        performAbilityMove(targetCell, capture, strike);
+        performAbilityMove(targetCell, capture);
       });
 
       targetCell.appendChild(marker);
     });
 
-    // клик мимо маркеров — отмена режима без хода
     setTimeout(() => {
       abilityCancelHandler = (e) => {
         if (!e.target.closest('.move-marker') && !e.target.closest('.capture-marker')) {
@@ -1118,25 +1345,10 @@
     }, 0);
   }
 
-  function performAbilityMove(targetCell, isCapture, isStrike) {
+  function performAbilityMove(targetCell, isCapture) {
     if (!abilityMode) return;
     const { sourceCell, piece } = abilityMode;
 
-    // Гоблин «рубит» соседнюю клетку, не сходя с места
-    if (isStrike) {
-      const targetStack = targetCell._stack || [];
-      const captured = targetStack[targetStack.length - 1];
-      if (captured) {
-        const idx = targetStack.indexOf(captured);
-        if (idx !== -1) targetStack.splice(idx, 1);
-        captured.remove();
-        updateCellVisuals(targetCell);
-      }
-      clearAbilityMode();
-      return;
-    }
-
-    // обычный ход — убираем фигуру с исходной клетки
     removePieceFromCell(sourceCell, piece);
 
     if (isCapture) {
@@ -1623,6 +1835,181 @@
     }
   };
 
+  /* ============================================================
+     ПРОСТЫЕ ФОРМЫ — SVG, чтобы их можно было красить
+     ============================================================ */
+  const geometricParts = {
+    geoCircle: {
+      label: 'Круг',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="12" fill="#2196f3"/>
+      </svg>`
+    },
+    geoSquare: {
+      label: 'Квадрат',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" fill="#4caf50"/>
+      </svg>`
+    },
+    geoTriangle: {
+      label: 'Треугольник',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="12,0 24,24 0,24" fill="#ff9800"/>
+      </svg>`
+    }
+  };
+
+  /* ============================================================
+     ЛИЦА С МАКСИМАЛЬНОЙ ДЕТАЛИЗАЦИЕЙ
+     ============================================================ */
+  const maxFaceParts = {
+    faceBeardedMan: {
+      label: 'Мужское лицо с бородой',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 43 43" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="21.573" cy="28.678" rx="2.5" ry="1" fill="#222"/>
+        <circle cx="28.292" cy="24.469" r="2.25" fill="#222"/>
+        <circle cx="14.708" cy="24.469" r="2.25" fill="#222"/>
+        <path d="M40.611,20.896c1.199-1.433,1.593-4.356,0.841-7.494c-0.981-4.095-3.538-6.993-5.709-6.473c-0.568,0.136-1.054,0.499-1.441,1.026c-1.045-3.512-4.672-7.57-10.843-7.57c-5.834,0-14.681,4-18.459,7.214c-1.339,1.139-2.677,3.183-3.306,5.803c-0.739,3.084-0.374,5.967,0.778,7.425C0.971,22.026,0,23.922,0,26.053c0,2.971,1.885,5.484,4.463,6.291c3.262,6.242,9.806,10.271,17.068,10.271c7.269,0,13.823-4.041,17.081-10.295c2.539-0.832,4.39-3.328,4.39-6.269C43.001,23.963,42.064,22.1,40.611,20.896zM24.605,38.012c-0.658-0.416-1.771-0.688-3.031-0.688c-1.261,0-2.374,0.271-3.031,0.688V35.2h6.062V38.012L24.605,38.012zM36.758,28.616c-0.29,0-0.562-0.066-0.816-0.182c-0.267,0.771-0.599,1.516-0.98,2.225c-1.309,0.059-3.257,1.023-5.13,2.678c-0.449,0.396-0.851,0.809-1.226,1.221v-1.356c0-1.104-0.896-2-2-2H16.542c-1.104,0-2,0.896-2,2v1.356c-0.376-0.412-0.775-0.822-1.225-1.221c-1.912-1.689-3.908-2.664-5.215-2.684c-0.387-0.715-0.719-1.461-0.986-2.238c-0.268,0.129-0.563,0.201-0.873,0.201c-1.244,0-2.242-1.146-2.242-2.563s0.998-2.563,2.242-2.563c0.31,0,0.605,0.072,0.873,0.201c0.267-0.777,0.599-1.523,0.986-2.238c1.307-0.02,3.303-0.995,5.215-2.684c0.45-0.399,0.849-0.809,1.225-1.221v1.356c0,1.104,0.896,2,2,2h11.062c1.104,0,2-0.896,2-2v-1.356c0.375,0.412,0.777,0.825,1.226,1.221c1.873,1.655,3.821,2.619,5.13,2.678c0.381,0.709,0.713,1.454,0.98,2.225c0.254-0.116,0.526-0.182,0.816-0.182c1.244,0,2.242,1.146,2.242,2.563S38.002,28.616,36.758,28.616z" fill="#222"/>
+      </svg>`
+    },
+    faceFemale: {
+      label: 'Женское лицо',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 31.156 31.156" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28.756,15.12c0.325-0.56,1.521-2.126-0.671-4.165c-0.279-0.629,1.287-2.189-1.029-3.219c-0.368-0.325,0.302-1.018-0.761-1.478C25.232,5.8,23.61,5.9,23.61,5.9s-0.246-0.995-0.94-0.939C21.977,5.019,22.089,5.9,22.089,5.9s-1.163-3.49-2.237-3.938c-1.073-0.447-3.535-1.611-4.564-1.731c-1.03-0.123-4.476-0.819-6.893,1.016C7.277,0.576,4.949,1.962,4.01,3.306C3.782,3.709,3.955,4.194,4.147,4.544c-1.919,2.161-1.282,5.628-0.846,6.75c0.013,0.046,0.023,0.096,0.034,0.145c-0.264,0.054-0.678,0.054-1.008-0.414c-0.14,0.674,0.642,0.774,1.068,0.78c0.046,0.448-0.011,0.934-0.316,1.393C2.438,14.16,1.725,14.6,1.494,15.245C1.165,16.144,2.892,16.3,2.892,16.3l0.004,0.343c0,0-0.554,0.537-0.437,0.957c0.157,0.559,1.27,0.359,1.27,0.359S2.66,18.354,2.71,18.874c0.05,0.521,0.497,0.746,0.497,0.746s-1.035,2.034,0.487,2.481c1.522,0.446,4.61-1.41,5.013,0.761c0.389,1.497,2.122,5.173,1.521,5.861s-1.521,1.745-1.521,1.745l15.796,0.492c0,0-4.878-6.312-5.37-7.025c-0.413-0.602-1.917-2.729-1.334-4.563c0.952-0.045,2.813-0.37,2.722-2.239c2.405-0.917,2.237-4.026,2.237-4.026l0.171-3.672c0,0,0.007-0.825,0.298-0.85z" fill="#222"/>
+      </svg>`
+    },
+    faceMaleProfile: {
+      label: 'Мужской профиль',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M45,5 C25,5 10,20 10,40 C10,55 20,70 35,78 L35,95 L50,95 L50,85 L60,85 L60,75 L70,75 L70,60 C85,55 95,45 95,30 C95,15 80,5 65,5 C60,5 55,5 45,5 Z M50,25 C55,25 60,30 60,35 C60,40 55,45 50,45 C45,45 40,40 40,35 C40,30 45,25 50,25 Z" fill="#222"/>
+      </svg>`
+    },
+    faceManOutline: {
+      label: 'Лицо мужчины (контур)',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9,11.75A1.25,1.25 0 0,0 7.75,13A1.25,1.25 0 0,0 9,14.25A1.25,1.25 0 0,0 10.25,13A1.25,1.25 0 0,0 9,11.75M15,11.75A1.25,1.25 0 0,0 13.75,13A1.25,1.25 0 0,0 15,14.25A1.25,1.25 0 0,0 16.25,13A1.25,1.25 0 0,0 15,11.75M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,11.71 4,11.42 4.05,11.14C6.41,10.09 8.28,8.16 9.26,5.77C11.07,8.33 14.05,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20Z" fill="#222"/>
+      </svg>`
+    }
+  };
+
+  /* ============================================================
+     ОДЕЖДА
+     ============================================================ */
+  const clothingParts = {
+    shirt: {
+      label: 'Рубашка',
+      w: 24, h: 24,
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 0H6L0 3v6l4-1v12h12V8l4 1V3l-6-3h-1a3 3 0 0 1-6 0z"/></svg>`
+    },
+    jacket: {
+      label: 'Куртка',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M384 96l-64-32-32 32-32-32-64 32v320l64 32 32-32 32 32 64-32V96zm-160 0l32 32-32 32-32-32 32-32z" fill="#333"/></svg>`
+    },
+    dress: {
+      label: 'Платье',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 64c-35 0-64 29-64 64v32l-64 288h256l-64-288v-32c0-35-29-64-64-64zm-32 64c0-18 14-32 32-32s32 14 32 32v16h-64v-16z" fill="#333"/></svg>`
+    },
+    hat: {
+      label: 'Шляпа',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><ellipse cx="256" cy="160" rx="160" ry="40" fill="#333"/><rect x="128" y="160" width="256" height="192" rx="32" fill="#333"/></svg>`
+    }
+  };
+
+  /* ============================================================
+     ФЛАГИ
+     ============================================================ */
+  const flagPatterns = {
+    russia: {
+      label: 'Россия',
+      pattern: `<rect x="0" y="0" width="1" height="0.333" fill="#ffffff"/><rect x="0" y="0.333" width="1" height="0.334" fill="#0039a6"/><rect x="0" y="0.667" width="1" height="0.333" fill="#d52b1e"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="5.33" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039a6"/><rect y="10.67" width="24" height="5.33" fill="#d52b1e"/></svg>`
+    },
+    usa: {
+      label: 'США',
+      pattern: `<rect x="0" y="0" width="1" height="1" fill="#ffffff"/><g fill="#b22234"><rect x="0" y="0" width="1" height="0.077"/><rect x="0" y="0.154" width="1" height="0.077"/><rect x="0" y="0.308" width="1" height="0.077"/><rect x="0" y="0.462" width="1" height="0.077"/><rect x="0" y="0.615" width="1" height="0.077"/><rect x="0" y="0.769" width="1" height="0.077"/><rect x="0" y="0.923" width="1" height="0.077"/></g><rect x="0" y="0" width="0.4" height="0.538" fill="#3c3b6e"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#fff"/><g fill="#b22234"><rect width="24" height="1.23"/><rect y="2.46" width="24" height="1.23"/><rect y="4.92" width="24" height="1.23"/><rect y="7.38" width="24" height="1.23"/><rect y="9.85" width="24" height="1.23"/><rect y="12.31" width="24" height="1.23"/><rect y="14.77" width="24" height="1.23"/></g><rect width="9.6" height="8.6" fill="#3c3b6e"/></svg>`
+    },
+    uk: {
+      label: 'Великобритания',
+      pattern: `<rect x="0" y="0" width="1" height="1" fill="#012169"/><path d="M0,0 L1,1 M1,0 L0,1" stroke="#fff" stroke-width="0.2"/><path d="M0,0 L1,1 M1,0 L0,1" stroke="#C8102E" stroke-width="0.1"/><path d="M0.5,0 L0.5,1 M0,0.5 L1,0.5" stroke="#fff" stroke-width="0.3"/><path d="M0.5,0 L0.5,1 M0,0.5 L1,0.5" stroke="#C8102E" stroke-width="0.17"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#012169"/><path d="M0,0 L24,16 M24,0 L0,16" stroke="#fff" stroke-width="3"/><path d="M0,0 L24,16 M24,0 L0,16" stroke="#C8102E" stroke-width="1.5"/><path d="M12,0 L12,16 M0,8 L24,8" stroke="#fff" stroke-width="5"/><path d="M12,0 L12,16 M0,8 L24,8" stroke="#C8102E" stroke-width="3"/></svg>`
+    },
+    france: {
+      label: 'Франция',
+      pattern: `<rect x="0" y="0" width="0.333" height="1" fill="#002395"/><rect x="0.333" y="0" width="0.334" height="1" fill="#ffffff"/><rect x="0.667" y="0" width="0.333" height="1" fill="#ed2939"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="16" fill="#002395"/><rect x="8" width="8" height="16" fill="#fff"/><rect x="16" width="8" height="16" fill="#ed2939"/></svg>`
+    },
+    germany: {
+      label: 'Германия',
+      pattern: `<rect x="0" y="0" width="1" height="0.333" fill="#000000"/><rect x="0" y="0.333" width="1" height="0.334" fill="#DD0000"/><rect x="0" y="0.667" width="1" height="0.333" fill="#FFCE00"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="5.33" fill="#000"/><rect y="5.33" width="24" height="5.34" fill="#DD0000"/><rect y="10.67" width="24" height="5.33" fill="#FFCE00"/></svg>`
+    },
+    japan: {
+      label: 'Япония',
+      pattern: `<rect x="0" y="0" width="1" height="1" fill="#ffffff"/><ellipse cx="0.5" cy="0.5" rx="0.25" ry="0.35" fill="#bc002d"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#fff"/><ellipse cx="12" cy="8" rx="5.6" ry="5.6" fill="#bc002d"/></svg>`
+    },
+    ukraine: {
+      label: 'Украина',
+      pattern: `<rect x="0" y="0" width="1" height="0.5" fill="#0057b7"/><rect x="0" y="0.5" width="1" height="0.5" fill="#ffd700"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="8" fill="#0057b7"/><rect y="8" width="24" height="8" fill="#ffd700"/></svg>`
+    },
+    italy: {
+      label: 'Италия',
+      pattern: `<rect x="0" y="0" width="0.333" height="1" fill="#009246"/><rect x="0.333" y="0" width="0.334" height="1" fill="#ffffff"/><rect x="0.667" y="0" width="0.333" height="1" fill="#ce2b37"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="16" fill="#009246"/><rect x="8" width="8" height="16" fill="#fff"/><rect x="16" width="8" height="16" fill="#ce2b37"/></svg>`
+    },
+    spain: {
+      label: 'Испания',
+      pattern: `<rect x="0" y="0" width="1" height="0.25" fill="#AA151B"/><rect x="0" y="0.25" width="1" height="0.5" fill="#F1BF00"/><rect x="0" y="0.75" width="1" height="0.25" fill="#AA151B"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="4" fill="#AA151B"/><rect y="4" width="24" height="8" fill="#F1BF00"/><rect y="12" width="24" height="4" fill="#AA151B"/></svg>`
+    },
+    poland: {
+      label: 'Польша',
+      pattern: `<rect x="0" y="0" width="1" height="0.5" fill="#ffffff"/><rect x="0" y="0.5" width="1" height="0.5" fill="#dc143c"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="8" fill="#fff"/><rect y="8" width="24" height="8" fill="#dc143c"/></svg>`
+    },
+    netherlands: {
+      label: 'Нидерланды',
+      pattern: `<rect x="0" y="0" width="1" height="0.333" fill="#ae1c28"/><rect x="0" y="0.333" width="1" height="0.334" fill="#ffffff"/><rect x="0" y="0.667" width="1" height="0.333" fill="#21468b"/>`,
+      preview: `<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="5.33" fill="#ae1c28"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><rect y="10.67" width="24" height="5.33" fill="#21468b"/></svg>`
+    }
+  };
+
+  /* ============================================================
+     ЭМОЦИИ
+     ============================================================ */
+  const emojiParts = {
+    smiley: {
+      label: 'Смайлик',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="#FFCC4D"/><circle cx="16" cy="20" r="3" fill="#664500"/><circle cx="32" cy="20" r="3" fill="#664500"/><path d="M14 28c2 6 8 10 10 10s8-4 10-10H14z" fill="#664500"/></svg>`
+    },
+    angry: {
+      label: 'Сердитый',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="#FF6B6B"/><path d="M12 16l8 4M36 16l-8 4" stroke="#333" stroke-width="2"/><circle cx="16" cy="24" r="3" fill="#333"/><circle cx="32" cy="24" r="3" fill="#333"/><path d="M14 34c2-6 8-8 10-8s8 2 10 8" stroke="#333" stroke-width="2" fill="none"/></svg>`
+    },
+    heartEyes: {
+      label: 'С сердечками',
+      w: 24, h: 24,
+      svg: `<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg"><circle cx="36" cy="36" r="23" fill="#FCEA2B"/><path fill="#EA5A47" d="M50.6 30.4c-1.4-1.4-3.7-1.4-5.1 0l-2.1 2.1-2.1-2.1c-1.4-1.4-3.7-1.4-5.1 0-1.4 1.4-1.4 3.7 0 5.1l7.2 7.2 7.2-7.2c1.4-1.4 1.4-3.7 0-5.1z"/><path fill="#EA5A47" d="M21.4 30.4c-1.4-1.4-3.7-1.4-5.1 0-1.4 1.4-1.4 3.7 0 5.1l2.1 2.1-2.1 2.1c-1.4 1.4-1.4 3.7 0 5.1 1.4 1.4 3.7 1.4 5.1 0l2.1-2.1 2.1 2.1c1.4 1.4 3.7 1.4 5.1 0 1.4-1.4 1.4-3.7 0-5.1l-2.1-2.1 2.1-2.1c1.4-1.4 1.4-3.7 0-5.1-1.4-1.4-3.7-1.4-5.1 0l-2.1 2.1-2.1-2.1z"/><path d="M25 48 Q36 58 47 48" fill="none" stroke="#664500" stroke-width="2.5" stroke-linecap="round"/></svg>`
+    }
+  };
+
+  /* Объединяем все части */
+  const allParts = Object.assign({}, pieceParts, geometricParts, maxFaceParts, clothingParts, emojiParts);
+
   const pieceTemplates = {
     pawn: {
       label: 'Пешка', icon: '♙',
@@ -1731,13 +2118,78 @@
         { part: 'head',      x: 24, y: 16 },
         { part: 'hat',       x: 18, y: 5  }
       ]
+    },
+    realMan: {
+      label: 'Реалистичный',
+      icon: '🧔',
+      parts: [
+        { part: 'baseWide',      x: 7,  y: 51 },
+        { part: 'collar',        x: 19, y: 46 },
+        { part: 'stemShort',     x: 24, y: 34 },
+        { part: 'arms',          x: 15, y: 32 },
+        { part: 'collar',        x: 19, y: 29 },
+        { part: 'faceBeardedMan', x: 18, y: 8  }
+      ]
+    },
+    realWoman: {
+      label: 'Реалистичная',
+      icon: '👩',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'collar',    x: 19, y: 46 },
+        { part: 'stemShort', x: 24, y: 34 },
+        { part: 'arms',      x: 15, y: 32 },
+        { part: 'collar',    x: 19, y: 29 },
+        { part: 'faceFemale', x: 18, y: 8  }
+      ]
+    },
+    fashionista: {
+      label: 'Модница',
+      icon: '👗',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'dress',     x: 18, y: 30 },
+        { part: 'collar',    x: 19, y: 24 },
+        { part: 'faceFemale', x: 18, y: 4  }
+      ]
+    },
+    patriot: {
+      label: 'Патриот',
+      icon: '🧑',
+      parts: [
+        { part: 'baseWide',  x: 7,  y: 51 },
+        { part: 'shirt',     x: 18, y: 30 },
+        { part: 'collar',    x: 19, y: 24 },
+        { part: 'faceBeardedMan', x: 18, y: 4 }
+      ]
     }
   };
 
   const constructorCanvas = document.getElementById('constructorCanvas');
+  const canvasWrap = document.getElementById('canvasWrap');
+  const zoomToggleBtn = document.getElementById('zoomToggleBtn');
   const addToTrayBtn = document.getElementById('addToTrayBtn');
   const clearCanvasBtn = document.getElementById('clearCanvasBtn');
 
+  /* ============================================================
+     РЕЖИМ ЛУПЫ ДЛЯ ХОЛСТА
+     ============================================================ */
+  let canvasZoomed = false;
+  const CANVAS_ZOOM_SCALE = 3;
+
+  function getCanvasScale() {
+    return canvasZoomed ? CANVAS_ZOOM_SCALE : 1;
+  }
+
+  zoomToggleBtn.addEventListener('click', () => {
+    canvasZoomed = !canvasZoomed;
+    canvasWrap.classList.toggle('zoomed', canvasZoomed);
+    zoomToggleBtn.classList.toggle('active', canvasZoomed);
+    zoomToggleBtn.textContent = canvasZoomed ? '🔍' : '🔍';
+    zoomToggleBtn.title = canvasZoomed ? 'Выключить лупу' : 'Включить лупу (увеличить холст)';
+  });
+
+  /* --- Палитра частей фигур --- */
   const partPalette = document.getElementById('partPalette');
   Object.entries(pieceParts).forEach(([id, part]) => {
     const item = document.createElement('div');
@@ -1750,6 +2202,72 @@
     partPalette.appendChild(item);
   });
 
+  /* --- Палитра лиц --- */
+  const maxFacePalette = document.getElementById('maxFacePalette');
+  Object.entries(maxFaceParts).forEach(([id, part]) => {
+    const item = document.createElement('div');
+    item.className = 'part-item';
+    item.draggable = true;
+    item.dataset.shape = 'part';
+    item.dataset.part = id;
+    item.title = part.label;
+    item.innerHTML = part.svg;
+    maxFacePalette.appendChild(item);
+  });
+
+  /* --- Палитра одежды --- */
+  const clothingPalette = document.getElementById('clothingPalette');
+  Object.entries(clothingParts).forEach(([id, part]) => {
+    const item = document.createElement('div');
+    item.className = 'part-item';
+    item.draggable = true;
+    item.dataset.shape = 'part';
+    item.dataset.part = id;
+    item.title = part.label;
+    item.innerHTML = part.svg;
+    clothingPalette.appendChild(item);
+  });
+
+  /* --- Палитра флагов --- */
+  const flagPalette = document.getElementById('flagPalette');
+  Object.entries(flagPatterns).forEach(([id, flag]) => {
+    const item = document.createElement('div');
+    item.className = 'flag-item';
+    item.draggable = true;
+    item.dataset.shape = 'flag';
+    item.dataset.flag = id;
+    item.title = 'Флаг: ' + flag.label + ' — перетащите на любую форму';
+    item.innerHTML = flag.preview;
+    flagPalette.appendChild(item);
+  });
+
+  /* --- Палитра эмоций --- */
+  const emojiPalette = document.getElementById('emojiPalette');
+  Object.entries(emojiParts).forEach(([id, part]) => {
+    const item = document.createElement('div');
+    item.className = 'part-item';
+    item.draggable = true;
+    item.dataset.shape = 'part';
+    item.dataset.part = id;
+    item.title = part.label;
+    item.innerHTML = part.svg;
+    emojiPalette.appendChild(item);
+  });
+
+  /* --- Палитра простых форм --- */
+  const shapePalette = document.getElementById('shapePalette');
+  Object.entries(geometricParts).forEach(([id, part]) => {
+    const item = document.createElement('div');
+    item.className = 'part-item';
+    item.draggable = true;
+    item.dataset.shape = 'part';
+    item.dataset.part = id;
+    item.title = part.label;
+    item.innerHTML = part.svg;
+    shapePalette.appendChild(item);
+  });
+
+  /* --- Палитра глифов --- */
   const glyphPalette = document.getElementById('glyphPalette');
   ['♔','♕','♖','♗','♘','♙','♚','♛','♜','♝','♞','♟'].forEach((sym) => {
     const item = document.createElement('div');
@@ -1762,6 +2280,7 @@
     glyphPalette.appendChild(item);
   });
 
+  /* --- Кнопки быстрой сборки --- */
   const templateRow = document.getElementById('templateRow');
   Object.entries(pieceTemplates).forEach(([id, tpl]) => {
     const btn = document.createElement('button');
@@ -1773,6 +2292,7 @@
     templateRow.appendChild(btn);
   });
 
+  /* --- Кнопки персонажей --- */
   const characterRow = document.getElementById('characterRow');
   Object.entries(characterTemplates).forEach(([id, tpl]) => {
     const btn = document.createElement('button');
@@ -1785,30 +2305,35 @@
   });
 
   let draggedShape = null;
+  let patternCounter = 0;
 
-  const shapeSizes = { circle: 22, square: 22, triangle: 22, glyph: 24 };
+  const shapeSizes = { glyph: 24, flag: 30 };
 
   function getShapeInfo(shape) {
     if (!shape) return null;
     if (shape.type === 'part') {
-      const p = pieceParts[shape.part];
+      const p = allParts[shape.part];
       if (!p) return null;
       return { w: p.w, h: p.h };
     }
     if (shape.type === 'glyph') {
       return { w: 24, h: 24 };
     }
-    const size = shapeSizes[shape.type] || 22;
+    if (shape.type === 'flag') {
+      return { w: 30, h: 20 };
+    }
+    const size = shapeSizes[shape.type] || 24;
     return { w: size, h: size };
   }
 
-  const paletteItems = document.querySelectorAll('.part-item, .shape-item, .glyph-item');
+  const paletteItems = document.querySelectorAll('.part-item, .glyph-item, .flag-item');
   paletteItems.forEach((item) => {
     item.addEventListener('dragstart', (e) => {
       draggedShape = {
         type: item.dataset.shape,
         part: item.dataset.part || null,
-        symbol: item.dataset.symbol || null
+        symbol: item.dataset.symbol || null,
+        flag: item.dataset.flag || null
       };
       e.dataTransfer.effectAllowed = 'copy';
       item.classList.add('dragging');
@@ -1816,32 +2341,108 @@
     item.addEventListener('dragend', () => {
       item.classList.remove('dragging');
       draggedShape = null;
+      document.querySelectorAll('.canvas-shape.flag-target').forEach(el => el.classList.remove('flag-target'));
     });
   });
 
+  /* --- dragover: подсветка формы, если тащат флаг --- */
   constructorCanvas.addEventListener('dragover', (e) => {
     if (!draggedShape) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
     constructorCanvas.classList.add('drag-over');
+
+    document.querySelectorAll('.canvas-shape.flag-target').forEach(el => el.classList.remove('flag-target'));
+
+    if (draggedShape.type === 'flag') {
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      const shapeEl = target ? target.closest('.canvas-shape') : null;
+      if (shapeEl && shapeEl.dataset.shape === 'part') {
+        shapeEl.classList.add('flag-target');
+      }
+    }
   });
   constructorCanvas.addEventListener('dragleave', () => {
     constructorCanvas.classList.remove('drag-over');
+    document.querySelectorAll('.canvas-shape.flag-target').forEach(el => el.classList.remove('flag-target'));
   });
+
+  /* --- drop --- */
   constructorCanvas.addEventListener('drop', (e) => {
     e.preventDefault();
     constructorCanvas.classList.remove('drag-over');
+    document.querySelectorAll('.canvas-shape.flag-target').forEach(el => el.classList.remove('flag-target'));
     if (!draggedShape) return;
+
+    const scale = getCanvasScale();
+
+    // === ФЛАГ: применяем к форме под курсором ===
+    if (draggedShape.type === 'flag') {
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      const shapeEl = target ? target.closest('.canvas-shape') : null;
+
+      if (shapeEl && shapeEl.dataset.shape === 'part') {
+        applyFlagPattern(shapeEl, draggedShape.flag);
+        return;
+      }
+
+      // Не попали в форму — добавляем флаг как самостоятельный элемент
+      const info = getShapeInfo(draggedShape);
+      const rect = constructorCanvas.getBoundingClientRect();
+      let left = (e.clientX - rect.left) / scale - info.w / 2;
+      let top  = (e.clientY - rect.top)  / scale - info.h / 2;
+      left = Math.max(0, Math.min(60 - info.w, left));
+      top  = Math.max(0, Math.min(60 - info.h, top));
+      addShapeToCanvas(draggedShape, left, top);
+      return;
+    }
+
+    // === Обычные части / глифы ===
     const info = getShapeInfo(draggedShape);
     if (!info) return;
 
     const rect = constructorCanvas.getBoundingClientRect();
-    let left = e.clientX - rect.left - info.w / 2;
-    let top  = e.clientY - rect.top  - info.h / 2;
-    left = Math.max(0, Math.min(rect.width  - info.w, left));
-    top  = Math.max(0, Math.min(rect.height - info.h, top));
+    let left = (e.clientX - rect.left) / scale - info.w / 2;
+    let top  = (e.clientY - rect.top)  / scale - info.h / 2;
+    left = Math.max(0, Math.min(60 - info.w, left));
+    top  = Math.max(0, Math.min(60 - info.h, top));
     addShapeToCanvas(draggedShape, left, top);
   });
+
+  /* ============================================================
+     УНИВЕРСАЛЬНАЯ ПОКРАСКА ЛЮБОЙ ФОРМЫ ФЛАГОМ
+     ============================================================ */
+  function applyFlagPattern(el, flagKey) {
+    const flag = flagPatterns[flagKey];
+    if (!flag) return;
+
+    if (!el.dataset.originalSvg) {
+      el.dataset.originalSvg = el.innerHTML;
+    }
+
+    const patternId = 'flagp-' + (++patternCounter) + '-' + Date.now().toString(36);
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(el.dataset.originalSvg, 'image/svg+xml');
+    const svg = doc.documentElement;
+
+    const defs = doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    defs.innerHTML = `<pattern id="${patternId}" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1">${flag.pattern}</pattern>`;
+    svg.insertBefore(defs, svg.firstChild);
+
+    svg.querySelectorAll('path, circle, ellipse, rect, polygon, polyline').forEach(shape => {
+      if (shape.closest('defs')) return;
+      const currentFill = shape.getAttribute('fill') || (shape.style && shape.style.fill);
+      if (currentFill === 'none') return;
+      shape.setAttribute('fill', `url(#${patternId})`);
+      shape.removeAttribute('style');
+    });
+
+    el.innerHTML = svg.outerHTML;
+    el.dataset.flag = flagKey;
+    el.dataset.flagLabel = '🎨 Покрашено флагом: ' + flag.label;
+    el.title = '';
+  }
 
   function addShapeToCanvas(shape, left, top) {
     const info = getShapeInfo(shape);
@@ -1858,18 +2459,29 @@
     if (shape.type === 'part') {
       el.classList.add('canvas-part');
       el.dataset.part = shape.part;
-      el.innerHTML = pieceParts[shape.part].svg;
+      el.innerHTML = allParts[shape.part].svg;
     } else if (shape.type === 'glyph') {
       el.classList.add('canvas-glyph');
       el.dataset.symbol = shape.symbol;
       el.textContent = shape.symbol;
       el.style.fontSize = '24px';
-    } else {
-      el.classList.add('shape-' + shape.type);
+    } else if (shape.type === 'flag') {
+      el.classList.add('canvas-flag');
+      el.dataset.flag = shape.flag;
+      el.innerHTML = flagPatterns[shape.flag].preview;
     }
 
     makeCanvasShapeDraggable(el);
-    el.addEventListener('dblclick', () => el.remove());
+    el.addEventListener('dblclick', () => {
+      if (el.dataset.flag && el.dataset.originalSvg) {
+        el.innerHTML = el.dataset.originalSvg;
+        delete el.dataset.flag;
+        delete el.dataset.flagLabel;
+        delete el.dataset.originalSvg;
+        return;
+      }
+      el.remove();
+    });
     constructorCanvas.appendChild(el);
   }
 
@@ -1879,6 +2491,7 @@
       e.preventDefault();
       e.stopPropagation();
 
+      const scale = getCanvasScale();
       const canvasRect = constructorCanvas.getBoundingClientRect();
       const startX = e.clientX;
       const startY = e.clientY;
@@ -1888,16 +2501,17 @@
       const h = parseFloat(el.style.height);
 
       function onMove(ev) {
-        let newLeft = startLeft + (ev.clientX - startX);
-        let newTop  = startTop  + (ev.clientY - startY);
+        // пересчёт дельты с учётом масштаба лупы
+        let newLeft = startLeft + (ev.clientX - startX) / scale;
+        let newTop  = startTop  + (ev.clientY - startY) / scale;
 
         newLeft = Math.round(newLeft / 2) * 2;
         newTop  = Math.round(newTop  / 2) * 2;
 
         [newLeft, newTop] = applySnap(el, newLeft, newTop, w, h);
 
-        newLeft = Math.max(0, Math.min(canvasRect.width  - w, newLeft));
-        newTop  = Math.max(0, Math.min(canvasRect.height - h, newTop));
+        newLeft = Math.max(0, Math.min(60 - w, newLeft));
+        newTop  = Math.max(0, Math.min(60 - h, newTop));
         el.style.left = newLeft + 'px';
         el.style.top  = newTop  + 'px';
       }
@@ -1947,7 +2561,7 @@
     const tpl = source[templateId];
     if (!tpl) return;
     tpl.parts.forEach((p) => {
-      const part = pieceParts[p.part];
+      const part = allParts[p.part];
       if (!part) return;
       addShapeToCanvas(
         { type: 'part', part: p.part },
